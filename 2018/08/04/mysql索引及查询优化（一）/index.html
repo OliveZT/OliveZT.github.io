@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="随便写写,吐槽," />
+  <meta name="keywords" content="sql,数据库,索引,优化," />
 
 
 
@@ -79,20 +79,29 @@
 
 
 
-<meta name="description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～    blog4olive.top域名不算好听（穷困的我这辈子都买不起好听的域名！可以考虑给我众筹。刚好添加了打赏功能，文章末尾">
-<meta name="keywords" content="随便写写,吐槽">
+<meta name="description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
+<meta name="keywords" content="sql,数据库,索引,优化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="正式告别CSDN">
-<meta property="og:url" content="http://yoursite.com/2018/08/08/终于也有了自己的博客/index.html">
+<meta property="og:title" content="mysql索引及查询优化（一）——从慢查询实例中开始分析">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/mysql索引及查询优化（一）/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～    blog4olive.top域名不算好听（穷困的我这辈子都买不起好听的域名！可以考虑给我众筹。刚好添加了打赏功能，文章末尾">
+<meta property="og:description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/12.jpg">
-<meta property="og:updated_time" content="2018-08-08T13:35:15.000Z">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/2-慢查询sql分析.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/3-count数据.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/4-表结构.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/5-退款最多的用户.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/6-模拟sql.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/7-存储引擎自动优化.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/8-强制走索引.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/9-优化查询.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/10-表结构分析.png">
+<meta property="og:updated_time" content="2018-08-18T01:37:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="正式告别CSDN">
-<meta name="twitter:description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～    blog4olive.top域名不算好听（穷困的我这辈子都买不起好听的域名！可以考虑给我众筹。刚好添加了打赏功能，文章末尾">
-<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/12.jpg">
+<meta name="twitter:title" content="mysql索引及查询优化（一）——从慢查询实例中开始分析">
+<meta name="twitter:description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
+<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png">
 
 
 
@@ -122,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/08/终于也有了自己的博客/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/04/mysql索引及查询优化（一）/"/>
 
 
 
 
 
-  <title>正式告别CSDN | Olive's Blog</title>
+  <title>mysql索引及查询优化（一）——从慢查询实例中开始分析 | Olive's Blog</title>
   
 
 
@@ -279,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/终于也有了自己的博客/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/mysql索引及查询优化（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -296,7 +305,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">正式告别CSDN</h1>
+          <h1 class="post-title" itemprop="name headline">mysql索引及查询优化（一）——从慢查询实例中开始分析</h1>
         
 
         <div class="post-meta">
@@ -308,8 +317,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T08:08:08+08:00">
-                2018-08-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-04T10:24:00+08:00">
+                2018-08-04
               </time>
             
 
@@ -326,7 +335,7 @@
 
           
           
-             <span id="/2018/08/08/终于也有了自己的博客/" class="leancloud_visitors" data-flag-title="正式告别CSDN">
+             <span id="/2018/08/04/mysql索引及查询优化（一）/" class="leancloud_visitors" data-flag-title="mysql索引及查询优化（一）——从慢查询实例中开始分析">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -357,27 +366,62 @@
       
 
       
-        <h2 id="终于有了自己的博客"><a href="#终于有了自己的博客" class="headerlink" title="终于有了自己的博客"></a>终于有了自己的博客</h2><p><strong>CSDN拜拜👋～</strong><br>无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！<br>BTW，现在终于也搭建了自己的博客～   </p>
-<p><a href="http://blog4olive.top" target="_blank" rel="noopener">blog4olive.top</a><br>域名不算好听（穷困的我这辈子都买不起好听的域名！可以考虑给我众筹。刚好添加了打赏功能，文章末尾即可看到！），但胜在简单明了对吧？  </p>
-<p><strong>关于博客更新</strong>  </p>
+        <h2 id="官方吐槽"><a href="#官方吐槽" class="headerlink" title="官方吐槽"></a>官方吐槽</h2><p><strong>为什么写这个</strong><br>写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。  </p>
+ <a id="more"></a>
+<p><strong>关于这个系列的博客</strong><br>这个博客大概是这么分布的：第一篇就根据实际场景来分析下索引及查询上的优化；第二篇和第三篇（如果我还能写得出来第三篇的话😅）来系统地整理下mysql的索引及查询的优化。 </p>
+<h2 id="——————-以下为正文-——————"><a href="#——————-以下为正文-——————" class="headerlink" title="—————— 以下为正文 ——————"></a>—————— 以下为正文 ——————</h2><p>问题是这样的，有一次一个客服同学急急忙忙来找我，说导出几条记录都失败了，查看了错误日志显示错误如下：<br><img src="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png" alt="image"> </p>
+<p>好了，不要盯着人家的红色框框看了，重点不是那里。</p>
+<p>重点是出现了慢查询日志，我知道看图肯定看不出来这条sql是啥，于是我贴心的贴了出来：</p>
+<pre><code>select* （这里其实不是这么暴力地拿全列数据，为了方便，就*表示了）
+from Refund
+FORCE INDEX (idx_sellerUserId_created_status)
+WHERE sellerUserId = 40955202 and status IN (800, 900) 
+and created &gt;= 946656000 AND created &lt; 2051193600 order
+by created desc limit 0, 50
+</code></pre><p>首先来分析下这条sql要做啥，其实就是在Refund（退款表）这个表中查询所有sellerUserId为40955202，并且状态在800及900（800，900等表示退款处于的状态，如退款申请，退款完成等）之间的，并且创建时间大于等于946656000且小于2051193600（这是两个时间戳）的所有记录，并且将所有这些记录根据created（创建时间）进行逆序排序后取开头50条。注意到这个sql有一个<font color="#DC143C"> FORCE INDEX (idx_sellerUserId_created_status)</font>，这个意思是让sql强制走idx_sellerUserId_created_status这个索引，至于为什么有时候需要强行走索引，这个涉及到mysql的查询优化，之后会讲到</p>
+<p>看了上面这条sql，有没有发现什么问题？可能我们会觉得有问题，但是并不能很清晰地说出来。那么，首先来看下mysql的执行计划吧！</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/2-慢查询sql分析.png" alt="image"> </p>
+<p>看出问题来了么？在我看来，这条sql至少存在3条问题！以下一条一条来分析：</p>
 <ol>
-<li>增加了文章pv    </li>
-<li>博客pv的显示  </li>
-<li>页脚icon等的优化  </li>
-<li>文章结构显示  </li>
-<li>文章搜索功能  </li>
-<li>打赏  </li>
+<li><p><font color="#DC143C">cerated的时间查询范围过大</font>，946656000转化为北京时间是2000/1/1 0:0:0，2051193600转化为北京时间是2035/1/1 0:0:0。那么这个时间段段含义是什么呢？在我应用的具体执行中，当用户在导出退款列表时没有选择导出的时间段时，就会给定一个默认的搜索时间段，而恰巧我设置了比较大的起止时间。这个时间段本来是不需要这么大的，这个时间段基本将这个用户所有的退款记录都包含了。我们来看下这个用户究竟有多少条退款记录：<br><img src="http://pd4rycnmc.bkt.clouddn.com/3-count数据.png" alt="image"><br>好家伙，1000多w条记录。。那么有人会说，时间段大也没关系，不是还有其他索引项可以进行约束吗？那么我们来看看第二个问题</p>
+</li>
+<li><p><font color="#DC143C">索引真的用上了么？</font>为了防止mysql优化器出现石志行为，这条sql特意告诉mysql：您啥也不用想！就用这个索引！那么我们来看下这个索引：idx_sellerUserId_created_status。很明显，这是一个多列索引，是一个由sellerUserId、created、status三列组成的一个联合索引。再来看下这条sql的where条件：<font color="#DC143C">WHERE sellerUserId = 40955202 and status IN(800, 900) and created &gt;= 946656000 AND created &lt; 2051193600 order by created</font>。乍一看，好像索引没用上啊？索引的排序是sellerUserId、created、status，而where条件的顺序是sellerUserId、status、created。那索引是不是没用了？当然不是的！mysql如果连这点优化都没有考虑，那和咸鱼有什么区别？？在这里，mysql会将where条件做一个优化，where条件内的顺序是不影响此索引的使用的。那么这个索引真的生效了么？事实是并没有。我们来分析下这个索引，注意看这个条件：created &gt;= 946656000 AND created &lt; 2051193600，很明显这是一个范围查询，<font color="#DC143C">而在多列索引的使用中，如果碰到了范围条件，那么存储引擎是不会使用范围条件右边的列的，也就是说，咱们这条sql，索引到了idx_sellerUserId_created就到头了，不会再使用status做索引。强制走的这个索引，失效了！</font>因此这条查询只用到部分的索引</p>
+</li>
+<li><p><font color="#DC143C">查询真的有必要那么写么？</font>我们可以看到where条件中限制了created字段的查询范围，而在排序时又需要根据created字段进行逆序排序，之后又只取了最终结果的开头50行。尽管我们很理想化地设想mysql只会返回我们需要的数据，比如在这条sql中我们真的很希望mysql可以只扫描50行就搜索我们需要的那50条数据。然而，在真正的查询中我们惊人地发现mysql读取了超过千万条的数据！一部分的原因在于查询过程中使用了不太合适的索引，另一方面在于我们的查询太累赘了，要想我们的查询不那么累赘，首先要搞清楚我们要查询什么。如上就分析过，我们需要的只是该用户创建的、处于某些状态的、最新的50条记录，那么在这种情况下created字段的范围还有什么意义？</p>
+</li>
 </ol>
-<p><strong>TODO:</strong>   </p>
-<ol>
-<li>评论功能  </li>
-<li>分享</li>
-<li>代码高亮等格式优化  </li>
-<li>更美观更优雅</li>
-<li>之后csdn的博客都要迁移过来，工程量巨大，想打人  </li>
-</ol>
-<p><strong><em>那么继续加油吧!</em></strong></p>
-<h4 id="送上一张美照，改天（月？年？）继续出去旅行"><a href="#送上一张美照，改天（月？年？）继续出去旅行" class="headerlink" title="送上一张美照，改天（月？年？）继续出去旅行"></a><a name="fenced-code-block">送上一张美照，改天（月？年？）继续出去旅行</a></h4><p><img src="http://pd4rycnmc.bkt.clouddn.com/12.jpg" alt="image"> </p>
+<p>那么针对上面几个问题，接下来我们想办法来优化下这条查询吧！以上的截图和问题都来源于线上，因为接下来的操作可能会涉及到表结构，所以接下来使用一个线下的db来进行模拟</p>
+<p>首先看下表的结构<br><img src="http://pd4rycnmc.bkt.clouddn.com/4-表结构.png" alt="image"> </p>
+<p>然后我们来查询下退款数量最多的用户</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/5-退款最多的用户.png" alt="image"></p>
+<p>我们发现id为93106308的用户退款数量最多，大概有5w多行，那么就用他来做模拟吧！</p>
+<p>首先来模拟下最初的sql语句</p>
+<pre><code>explain 
+select* from Refund force index 
+(idx_sellerUserId_created_status) where 
+sellerUserId=93106308 and status IN (700, 900, 1000) 
+and created &gt;= 1278691200 AND created &lt; 1531152000 
+order by created desc 
+limit 0, 10
+</code></pre><p><img src="http://pd4rycnmc.bkt.clouddn.com/6-模拟sql.png" alt="image"></p>
+<p>如上图所示的执行结果，我们可以看到，<font color="#DC143C">mysql确实使用了idx_sellerUserId_created_status这个索引（这其实是废话，你都强制人家走了，，），然后看rows这一行：64867！存储引擎扫描来6w多行才得到我们需要的数据！</font>可以看到在Extra这一列中显示的是：Using index condition，这表示查询部分使用了索引，对于不在索引中的列需要回表查询数据，这也如我们预想的那样</p>
+<p>那么我们来试试存储引擎的自动优化吧：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/7-存储引擎自动优化.png" alt="image"></p>
+<p>哈哈，存储引擎的查询优化其实并没有想象中的那么好（但也没那么差），<font color="#DC143C">去除了强制索引后存储引擎自己找到了一个它认为的最优的索引：idx_created，可以看到Extra这一列中显示的是：Using where，这表示查询需要回表捞数据以后再使用where条件来进行过滤。那么和上面的情况做对比，在性能上其实是毫无差别。</font></p>
+<p>那我们在索引上来优化下吧，为了避免遇到范围查询而使右边索引列失效，<font color="#DC143C">我们来将idx_sellerUserId_created_status索引修改为idx_sellerUserId_status_created，并且让存储引擎强制走这个索引：</font></p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/8-强制走索引.png" alt="image"></p>
+<font color="#DC143C">发现变化了么？查询扫描的行数少了很多！</font>
+
+<p>那接下来再优化下查询语句：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/9-优化查询.png" alt="image"></p>
+<font color="#DC143C">可以看到，因为优化了查询语句，根据created进行逆序排序，导致最后扫描的行数大为减少！</font>
+
+<p>在这里，这条查询的优化并不是在任何场景下都是能保证有很高的查询性能的。我们知道索引在db中维护了一个b+tree 结构（innodb引擎默认结构）。idx_created索引将所有的数据根据created来建立了一个b+tree，当我们要查询的用户数据恰好在b+tree的后方的时候，查询也是需要扫描不少行的：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/10-表结构分析.png" alt="image"></p>
+<p>所以不同的数据库的数据结构需要具体的分析，如果没有对表结构以及数据结构有较清晰的认识，我认为这种查询优化是不太行的，有时候甚至会起到反面效果。</p>
+<p>所以综合考虑，我还是建议修改下索引结构即可，至于为什么不是直接增加一个索引，这是为了减小存储引擎的压力，过多的冗余索引也给维护带来负担</p>
+<p>接下来的博客会系统地讲述下mysql的索引及查询优化</p>
+<p>对上述问题有问题或者想一起讨论的朋友可以随时联系～</p>
 
       
     </div>
@@ -424,9 +468,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/随便写写/" rel="tag"># 随便写写</a>
+            <a href="/tags/sql/" rel="tag"># sql</a>
           
-            <a href="/tags/吐槽/" rel="tag"># 吐槽</a>
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/索引/" rel="tag"># 索引</a>
+          
+            <a href="/tags/优化/" rel="tag"># 优化</a>
           
         </div>
       
@@ -439,15 +487,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/04/mysql索引及查询优化（一）/" rel="next" title="mysql索引及查询优化（一）——从慢查询实例中开始分析">
-                <i class="fa fa-chevron-left"></i> mysql索引及查询优化（一）——从慢查询实例中开始分析
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/08/终于也有了自己的博客/" rel="prev" title="正式告别CSDN">
+                正式告别CSDN <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -590,7 +638,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#终于有了自己的博客"><span class="nav-number">1.</span> <span class="nav-text">终于有了自己的博客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#送上一张美照，改天（月？年？）继续出去旅行"><span class="nav-number">1.0.1.</span> <span class="nav-text">送上一张美照，改天（月？年？）继续出去旅行</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方吐槽"><span class="nav-number">1.</span> <span class="nav-text">官方吐槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#——————-以下为正文-——————"><span class="nav-number">2.</span> <span class="nav-text">—————— 以下为正文 ——————</span></a></li></ol></div>
             
 
           </div>
