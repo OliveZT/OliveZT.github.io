@@ -1943,7 +1943,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #d118ff;
+  background: #2dbe34;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3110,12 +3110,4 @@ pre .javascript .function {
   .post-body {
     text-align: justify;
   }
-}
-code {
-  color: #c7254e;
-  background: #f9f2f4;
-  border: 1px solid #d6d6d6;
-  padding: 1px 4px;
-  word-break: break-all;
-  border-radius: 4px;
 }
