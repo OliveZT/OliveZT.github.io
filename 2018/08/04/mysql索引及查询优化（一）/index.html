@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/8-强制走索引.png">
 <meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/9-优化查询.png">
 <meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/10-表结构分析.png">
-<meta property="og:updated_time" content="2018-08-18T06:23:34.000Z">
+<meta property="og:updated_time" content="2018-08-18T06:30:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql索引及查询优化（一）——从慢查询实例中开始分析">
 <meta name="twitter:description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
@@ -331,6 +331,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/04/mysql索引及查询优化（一）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/08/04/mysql索引及查询优化（一）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -391,7 +401,7 @@
 <p><img src="http://pd4rycnmc.bkt.clouddn.com/5-退款最多的用户.png" alt="image"></p>
 <p>我们发现id为93106308的用户退款数量最多，大概有5w多行，那么就用他来做模拟吧！</p>
 <p>首先来模拟下最初的sql语句</p>
-<p>explain<br>select*<br>FROM Refund<br>FORCE INDEX (idx_sellerUserId_created_status)<br>WHERE sellerUserId=93106308 and status IN (700, 900, 1000)<br>AND created &gt;= 1278691200 AND created &lt; 1531152000<br>ORDER BY created desc<br>LIMIT 0, 10</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> </span><br><span class="line"><span class="keyword">select</span>* </span><br><span class="line"><span class="keyword">FROM</span> Refund </span><br><span class="line"><span class="keyword">FORCE</span> <span class="keyword">INDEX</span> (idx_sellerUserId_created_status) </span><br><span class="line"><span class="keyword">WHERE</span> sellerUserId=<span class="number">93106308</span> <span class="keyword">and</span> <span class="keyword">status</span> <span class="keyword">IN</span> (<span class="number">700</span>, <span class="number">900</span>, <span class="number">1000</span>) </span><br><span class="line"><span class="keyword">AND</span> created &gt;= <span class="number">1278691200</span> <span class="keyword">AND</span> created &lt; <span class="number">1531152000</span> </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> created <span class="keyword">desc</span> </span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">10</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://pd4rycnmc.bkt.clouddn.com/6-模拟sql.png" alt="image"></p>
 <p>如上图所示的执行结果，我们可以看到，<font color="#DC143C">mysql确实使用了idx_sellerUserId_created_status这个索引（这其实是废话，你都强制人家走了，，），然后看rows这一行：64867！存储引擎扫描来6w多行才得到我们需要的数据！</font>可以看到在Extra这一列中显示的是：Using index condition，这表示查询部分使用了索引，对于不在索引中的列需要回表查询数据，这也如我们预想的那样</p>
 <p>那么我们来试试存储引擎的自动优化吧：</p>
@@ -423,7 +433,7 @@
     
       <div>
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>Donate comment here!</div>
+  <div>Donate here!</div>
   <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
     <span>Donate</span>
   </button>
@@ -513,6 +523,9 @@
 
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -911,6 +924,28 @@ $(function() {
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'Gf3CqrQ1pwzk4rh1RjVOBBGl-gzGzoHsz',
+        appKey: 'FH7zDFrlhcJJXB1UhaXlhzaz',
+        placeholder: 'Say something, I'm giving up on you (ಥ_ಥ)',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
