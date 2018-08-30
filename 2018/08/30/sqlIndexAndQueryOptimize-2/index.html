@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Traveling, Coding" />
+  <meta name="keywords" content="sql,数据库,索引,优化," />
 
 
 
@@ -79,17 +79,24 @@
 
 
 
-<meta name="description" content="Bad times make a good man.">
-<meta name="keywords" content="traveling, coding, fitness, living">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Olive&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/随便写写/index.html">
+<meta name="description" content="写在前面隔了那么久，终于写了索引及查询优化的第二篇博文，确实用了好长的时间去看书，看博客然后总结。然而，不得不说我之前对sql以及索引相关的知识了解确实甚少（并且在实际中用的也不太多），因此即使补充了一些相关知识， 写出来的文章也会有很多的不足与纰漏。在此也希望从文章中看出有什么不足的朋友可以尽情批评指正～这篇博客主要分三个部分，第一部分简单介绍了索引的概念及类型；第二部分介绍了如何通过Expla">
+<meta name="keywords" content="sql,数据库,索引,优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql索引及查询优化（二）——索引概述">
+<meta property="og:url" content="http://yoursite.com/2018/08/30/sqlIndexAndQueryOptimize-2/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="Bad times make a good man.">
+<meta property="og:description" content="写在前面隔了那么久，终于写了索引及查询优化的第二篇博文，确实用了好长的时间去看书，看博客然后总结。然而，不得不说我之前对sql以及索引相关的知识了解确实甚少（并且在实际中用的也不太多），因此即使补充了一些相关知识， 写出来的文章也会有很多的不足与纰漏。在此也希望从文章中看出有什么不足的朋友可以尽情批评指正～这篇博客主要分三个部分，第一部分简单介绍了索引的概念及类型；第二部分介绍了如何通过Expla">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-1.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-2.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-3.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-4.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-5.png">
+<meta property="og:updated_time" content="2018-08-30T01:50:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Olive&#39;s Blog">
-<meta name="twitter:description" content="Bad times make a good man.">
+<meta name="twitter:title" content="mysql索引及查询优化（二）——索引概述">
+<meta name="twitter:description" content="写在前面隔了那么久，终于写了索引及查询优化的第二篇博文，确实用了好长的时间去看书，看博客然后总结。然而，不得不说我之前对sql以及索引相关的知识了解确实甚少（并且在实际中用的也不太多），因此即使补充了一些相关知识， 写出来的文章也会有很多的不足与纰漏。在此也希望从文章中看出有什么不足的朋友可以尽情批评指正～这篇博客主要分三个部分，第一部分简单介绍了索引的概念及类型；第二部分介绍了如何通过Expla">
+<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/optimize2-1.png">
 
 
 
@@ -119,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/随便写写/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/30/sqlIndexAndQueryOptimize-2/"/>
 
 
 
 
 
-  <title>Tag: 随便写写 | Olive's Blog</title>
+  <title>mysql索引及查询优化（二）——索引概述 | Olive's Blog</title>
   
 
 
@@ -144,7 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -262,54 +269,242 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>随便写写<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/30/sqlIndexAndQueryOptimize-2/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Olive">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olive's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/08/08/20180808-sayByeToCSDN/" itemprop="url">
-              
-                <span itemprop="name">正式告别CSDN</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">mysql索引及查询优化（二）——索引概述</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-08-08T08:08:08+08:00"
-              content="2018-08-08" >
-          08-08
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-30T10:24:00+08:00">
+                2018-08-30
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/08/30/sqlIndexAndQueryOptimize-2/" class="leancloud_visitors" data-flag-title="mysql索引及查询优化（二）——索引概述">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>隔了那么久，终于写了索引及查询优化的第二篇博文，确实用了好长的时间去看书，看博客然后总结。<br>然而，不得不说我之前对sql以及索引相关的知识了解确实甚少（并且在实际中用的也不太多），因此即使补充了一些相关知识， 写出来的文章也会有很多的不足与纰漏。在此也希望从文章中看出有什么不足的朋友可以尽情批评指正～<br>这篇博客主要分三个部分，第一部分简单介绍了索引的概念及类型；第二部分介绍了如何通过Explain指令分析sql；第三部分给出了一些sql的实例。  </p>
+ <a id="more"></a>
+<h2 id="Ⅰ-索引概念及类型"><a href="#Ⅰ-索引概念及类型" class="headerlink" title="Ⅰ. 索引概念及类型"></a>Ⅰ. 索引概念及类型</h2><p><strong>1 索引概念</strong><br>索引是存储引擎用来快速找到记录的一种数据结构。类似于书目录，如果我们想要找“第三章第四小节”的内容，那么我们首先先从目录中找到其所在的页数，然后再从具体的页中找到我们需要的数据。索引也是一样，在查询时，先找到索引所在的位置，然后根据索引匹配到的记录来找到对应的数据。 </p>
+<p><strong>2 索引类型</strong>  </p>
+<p><strong>2.1 b-tree索引</strong><br>b-tree索引是mysql引擎中用的较多的一种类型，大多数的引擎都支持，除了archive引擎（对这个好陌生 - -）。不同的存储引擎使用不同的b-tree索引，并且性能也有差别。比如在innodb引擎中使用b+tree索引。myisam引擎会对索引进行前缀压缩，所以索引很更小；myisam中索引通过数据的物理位置来引用索引行，而innodb中根据主键引用索引行。<br>b-tree索引对索引按照顺序组织存储的，因此适合查找范围数据。</p>
+<p>B-tree索引在实际开发中是用的最多最广泛的索引结构，之后的讨论都默认是以B-tree索引为例。在某些不当的查询或者索引的使用中会导致索引失效，主要有以下这几种情况：</p>
+<ol>
+<li>严格遵循最左匹配原则。即查询必须从索引的最左前列开始。比如一个索引(name_age_dob)，如果要查询age=18的用户，就无法使用(name_age_dob)这个索引了。</li>
+<li>不能跳过索引中间的列。比如我们要查找age=18并且dob=1024的用户，但不指定age，那么就无法使用到(name_age_dob)索引，只能使用索引的第一列。</li>
+<li>查询中某个列出现了范围查询，那么它右边的列都无法通过索引来进行优化查询。这在前一篇博客（xxxx）中就讲述过。</li>
+<li>索引字段上使用了（!= &lt;&gt; is null is not null or 或者like以”%_” 开头）等会导致索引失效而转入全表扫描</li>
+<li>对索引列进行操作（这里指索引列不能是表达式的一部分，也不能是函数的参数），比如下边的sql就不能使用索引，明眼人一看就知道id=1023啊，然而Mysql引擎并不会那么的智能，所以我们在查询时能简化条件就简化条件，越简单越好。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">id</span>+<span class="number">1</span>=<span class="number">1024</span></span><br></pre></td></tr></table></figure>
+<p><strong>2.2 哈希索引</strong><br>哈希索引基于哈希表实现，mysql引擎中只有memory支持哈希索引，我们知道哈希表会存在“哈希碰撞”的问题，memory引擎根据链表法来解决键值冲突的情况。类比于哈希表，使用哈希索引查找的速度十分快。但也有一些限制：  </p>
+<ol>
+<li>哈希索引只包含哈希值以及行指针，不存储具体字段的值，所以不能根据匹配索引来避免读取表行</li>
+<li>哈希索引的数据不是按照索引值顺序存储的，因此无法用于排序（这个应该很好理解）</li>
+<li>哈希索引因为是根据对key进行hash来查找的，因此不支持部分索引匹配的情况。</li>
+<li>哈希索引不支持范围查询，只支持等值查询（注意IN()也是一种等值查询！）</li>
+<li>上面说到了哈希碰撞，如果碰撞过多，哈希索引的性能将受很大的影响</li>
+</ol>
+<p><strong>2.3 全文索引</strong><br>全文索引查找的是文本中的关键词，而不是直接比较索引中的值。用的不多（我根本没用过），这也不是我想说的重点，所以不详细展开。 </p>
+<p><strong>2.4 聚簇索引</strong><br>首先，聚簇索引并不是一种简单的索引类型，而是一种数据存储方式。在innodb中，聚簇索引实际在一个结构中同时保存了b-tree索引以及数据行。  </p>
+<p>聚簇索引的数据的物理存放顺序与索引顺序是一致的，即：只要索引是相邻的，那么对应的数据一定也是相邻地存放在磁盘上的。因为一张表只有一个物理结构，因此一张表也只能有一个聚簇索引。聚簇索引的叶子节点就是数据节点，而非聚簇索引的叶子节点仍然是索引节点，并且有指向对应数据块的指针。innodb默认会以主键作为聚簇索引，如果没有定义主键，innodb会选择一个唯一的非空索引来代替。如果前面的情况都不满足，那么innodb会隐式定义一个主键来作为聚簇索引。</p>
+<p><strong>2.5 覆盖索引</strong><br>覆盖索引（Covering Index）也不是常规意义上的索引。如果一个索引包含了所有查询需要的字段，那么久称这个索引为“覆盖索引”。使用“覆盖索引”可以极大提高查询性能。</p>
+<h2 id="Ⅱ-SQL分析"><a href="#Ⅱ-SQL分析" class="headerlink" title="Ⅱ. SQL分析"></a>Ⅱ. SQL分析</h2><p>在进行sql分析时，explain语句是一个常用的方法，我们将举出一些sql的查询来进行分析，以下的例子都来自于Refund表（这张表与第一篇博文中使用的表相同，地址：<a href="http://blog4olive.top/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/," title="title" target="_blank" rel="noopener">mysql索引及查询优化（一）——从慢查询实例中开始分析</a>）</p>
+<p><strong>explain得到的结果分析:</strong>  </p>
+<p>请看下图的例子：<br><img src="http://pd4rycnmc.bkt.clouddn.com/optimize2-1.png" alt="image"></p>
+<p>首先我们来解释下explain结果的各个列的含义：</p>
+<ol>
+<li><strong>id:</strong>表示select子句执行的id，如果是子查询，id的序号就会递增了，并且id值越大的子句越先被执行</li>
+<li><strong>select_type:</strong>表示select语句的类型，比如：SIMPLE（简单查询，不包含子查询或者UNION）；PRIMARY 查询中若包含任何复杂的子部分，最外层查询则被标记为PRIMARY，具体不展开了，可以自行搜索</li>
+<li><strong>table:</strong>当前执行的表名</li>
+<li><strong>type：</strong>当前表内访问方式，访问方式从好到坏排序为： <strong>system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; all</strong><br>system指表只有一行记录；<br>const表示查询了一次就找到结果；<br>eq_ref表示唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配；<br>ref表示非唯一索引扫描；<br>range 表示只检索给定范围的行，使用一个索引来选择行；<br>index表示查询扫描了索引树；<br>all表示全表扫描  </li>
+<li><strong>possible_keys:</strong>可能使用到的索引</li>
+<li><strong>key:</strong>经过优化器评估最终使用的索引</li>
+<li><strong>key_length:</strong>使用到的索引长度</li>
+<li><strong>ref:</strong>引用到的上一个表的列<br>rows:要得到最终记录索要扫描经过的记录数，rows值越小说明查询越高效</li>
+<li><strong>Extra:</strong>额外的信息说明，主要的类型有：<br>Using filesort：文件排序，说明mysql无法利用索引完成排序<br>Using temporary：临时表， 使用了用临时表保存中间结果，MySQL在对查询结果排序时使用临时表，这个时候效率是极其低下的<br>Using index：表示相应的select操作中使用了覆盖索引（Covering Index），避免访问了回表访问数据<br>Using where：使用了where过滤<br>Using join buffer：使用了连接缓存<br>impossible where：where子句的值总是false，不能用来获取任何元组<br>Using index condition：Using index condition 会先条件过滤索引，过滤完索引后找到所有符合索引条件的数据行，随后用 WHERE 子句中的其他条件去过滤这些数据行</li>
+</ol>
+<h2 id="Ⅲ-实例分析"><a href="#Ⅲ-实例分析" class="headerlink" title="Ⅲ. 实例分析"></a>Ⅲ. 实例分析</h2><p>请看如下的sql：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span>* <span class="keyword">from</span> Refund <span class="keyword">where</span> sellerUserId=<span class="number">93106308</span></span><br></pre></td></tr></table></figure></p>
+<p>因为索引无法覆盖查询所需要的全部列，因此Extra中显示“Using index condition”：<br><img src="http://pd4rycnmc.bkt.clouddn.com/optimize2-2.png" alt="image"></p>
+<p>再看这个SQL：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">status</span> <span class="keyword">from</span> Refund <span class="keyword">where</span> <span class="keyword">status</span>=<span class="number">700</span> <span class="keyword">order</span> <span class="keyword">by</span> created</span><br></pre></td></tr></table></figure></p>
+<p>这里进行了文件排序：<br><img src="http://pd4rycnmc.bkt.clouddn.com/optimize2-3.png" alt="image"></p>
+<p>覆盖索引查询：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> sellerUserId, <span class="keyword">status</span>, created <span class="keyword">from</span> Refund</span><br></pre></td></tr></table></figure></p>
+<p>Refund表中有一个多列索引：KEY <code>idx_sellerUserId_created_status</code> <code>(sellerUserId</code>,<code>created</code>,<code>status)</code>，如果只访问sellerUserId, status, created这三列，查询将使用“覆盖索引”：<br><img src="http://pd4rycnmc.bkt.clouddn.com/optimize2-4.png" alt="image"><br>具体执行结果如上图所示，在type列中显示了“index”，这表示此次查询将通过索引来访问数据；Extra中的“Using  index”表示此次查询将使用“索引覆盖”查询。</p>
+<p>最后一个sql例子：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">status</span> <span class="keyword">from</span> Refund <span class="keyword">where</span> sellerUserId=<span class="number">93106308</span> <span class="keyword">order</span> <span class="keyword">by</span> created</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/optimize2-5.png" alt="image"><br>这句sql中的Extra不仅出现了“Using  index”还出现了“Using  where”，这表示索引被用来执行索引键值的查找；如果没有同时出现“Using  where”，表明索引用来读取数据而非执行查找动作。</p>
+<h2 id="Ⅳ-Reference"><a href="#Ⅳ-Reference" class="headerlink" title="Ⅳ. Reference"></a>Ⅳ. Reference</h2><p>[1]. EXPLAIN用法和结果分析：<a href="https://blog.csdn.net/why15732625998/article/details/80388236" target="_blank" rel="noopener">https://blog.csdn.net/why15732625998/article/details/80388236</a><br>[2]. Schwartz B, Zaitsev P, Tkachenko V. High Performance MySQL: Optimization, Backups, and Replication[M]. O’Reilly Media, Inc. 2012.</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate here!</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://pd4rycnmc.bkt.clouddn.com/wechat.jpg" alt="Olive WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="http://pd4rycnmc.bkt.clouddn.com/alipay.jpg" alt="Olive Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sql/" rel="tag"><i class="fa fa-tag"></i> sql</a>
+          
+            <a href="/tags/数据库/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+          
+            <a href="/tags/索引/" rel="tag"><i class="fa fa-tag"></i> 索引</a>
+          
+            <a href="/tags/优化/" rel="tag"><i class="fa fa-tag"></i> 优化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/08/20180808-sayByeToCSDN/" rel="next" title="正式告别CSDN">
+                <i class="fa fa-chevron-left"></i> 正式告别CSDN
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -317,6 +512,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -337,8 +541,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -409,6 +622,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅰ-索引概念及类型"><span class="nav-number">2.</span> <span class="nav-text">Ⅰ. 索引概念及类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅱ-SQL分析"><span class="nav-number">3.</span> <span class="nav-text">Ⅱ. SQL分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅲ-实例分析"><span class="nav-number">4.</span> <span class="nav-text">Ⅲ. 实例分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅳ-Reference"><span class="nav-number">5.</span> <span class="nav-text">Ⅳ. Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -645,6 +874,10 @@ $(function() {
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -673,6 +906,17 @@ $(function() {
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
