@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Olive&#39;s Blog">
 <meta property="og:description" content="写在前面终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-04T10:33:23.000Z">
+<meta property="og:updated_time" content="2018-09-04T10:41:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql索引及查询优化（三）——索引设计概述">
 <meta name="twitter:description" content="写在前面终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。">
@@ -373,7 +373,7 @@
 <p><strong>4. 索引星级的选择</strong><br>能设计出三星索引，无疑是最好的情况（不考虑存储索引等的开销），但在很多实际情况下，是无法设计出理想的三星索引的。换句话说，对于索引的某些星级我们必须要进行舍弃。</p>
 <p>举个例子：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> age <span class="keyword">between</span> a <span class="keyword">and</span> b <span class="keyword">and</span> city=“hangzhou” <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span></span><br></pre></td></tr></table></figure>
-<p>在这个sql中，age是一个范围条件，在前面的博客中（<a href="http://blog4olive.top/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/," title="title" target="_blank" rel="noopener">mysql索引及查询优化（一）——从慢查询实例中开始分析</a>）我们说过，如果索引列是一个范围条件，那么其后的索引都将失效。那这个时候索引该如何设计？<br>在前面说过，索引的第三颗星通常是最重要的，那么我们先设计第三颗星，索引将是：*_user。添加name会让索引满足第二颗星，但这是基于name必须在范围谓词age的前面的假设的，那么此时索引将变成:name_age_sex或者city_name_age_sex，那么此时的索引满不满足第一颗星的，答案是不满足的。讲到这里，我们一定能发现，第一颗星和第二颗星是存在互斥的，如果要满足第一颗星，那么索引将是city_age_name_sex，然而此时name列索引是不会生效的，此时就无法避免排序，也即无法满足第二颗星。<br>综上所述，在这种情况下，我们是无法设计出理想的三星索引的，我们必须要进行取舍。<br>至于是选第一颗星还是第二颗星，<strong>一个普遍的结论（虽然并不是完全正确的）是第一颗星要比第二颗星重要，因为在硬件发展水平如此快速的今天，可能排序带来的开销远低于因为索引片太厚而带来的查询开销。</strong></p>
+<p>在这个sql中，age是一个范围条件，在前面的博客中（<a href="http://blog4olive.top/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" target="_blank" rel="noopener">mysql索引及查询优化（一）——从慢查询实例中开始分析</a>）我们说过，如果索引列是一个范围条件，那么其后的索引都将失效。那这个时候索引该如何设计？<br>在前面说过，索引的第三颗星通常是最重要的，那么我们先设计第三颗星，索引将是：*_user。添加name会让索引满足第二颗星，但这是基于name必须在范围谓词age的前面的假设的，那么此时索引将变成:name_age_sex或者city_name_age_sex，那么此时的索引满不满足第一颗星的，答案是不满足的。讲到这里，我们一定能发现，第一颗星和第二颗星是存在互斥的，如果要满足第一颗星，那么索引将是city_age_name_sex，然而此时name列索引是不会生效的，此时就无法避免排序，也即无法满足第二颗星。<br>综上所述，在这种情况下，我们是无法设计出理想的三星索引的，我们必须要进行取舍。<br>至于是选第一颗星还是第二颗星，<strong>一个普遍的结论（虽然并不是完全正确的）是第一颗星要比第二颗星重要，因为在硬件发展水平如此快速的今天，可能排序带来的开销远低于因为索引片太厚而带来的查询开销。</strong></p>
 <p>另外，虽然理论上为每一个查询都设计出最优的索引看似是比较好的，然而真正这么做的时候我们需要考虑下开销：首先过多的索引会占用大量的磁盘空间，我们需要评估索引带来的收益是否能抵消磁盘空间带来的开销；其次表上有太多的索引（并且这些索引可能存在冗余），会使db的插入、更新与删除操作变得较慢；最后，较频繁的插入频率，可能会加大磁盘的负载。<br>所以，<strong>理论终究只是理论，具体问题还需要具体分析。</strong></p>
 <h2 id="Ⅲ-如何设计及评估索引性能"><a href="#Ⅲ-如何设计及评估索引性能" class="headerlink" title="Ⅲ. 如何设计及评估索引性能"></a>Ⅲ. 如何设计及评估索引性能</h2><p>首先给出两个快速且有用的方法：<br><strong>1. 基本问题法（Basic Question, BQ）</strong><br><strong>2. 快速上限估算法（Quick Upper-Bound Estimate, QUBE）</strong></p>
 <p><strong>1. 基本问题法</strong><br>BQ是一个很简单很快速的评估方法，对于每一个查询语句，首先都要问这么一个问题：<br>    是否存在一个索引包含了where子句所用到的所有列？<br>如果答案是不存在，那么应该考虑将缺少的列加入到现有的索引中去。此时会产生一个半宽索引，虽然这样索引只能拿到一星，但索引过滤可以保证回表访问只发生在所有查询条件都满足的时候。如果性能还不够，那么可以将查询所有涉及到的列都加到索引上，这会产生一个避免所有表访问的宽索引。如果查询还是很慢，那么就重新设计索引～</p>
