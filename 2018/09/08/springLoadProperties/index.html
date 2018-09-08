@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Olive&#39;s Blog">
 <meta property="og:description" content="前言在实际项目开发中经常会根据不同的环境（dev,pre,online）来配置不同的类或属性，比如说根据不同的环境配置不同的zookeeper或者数据库datasource。最简单的无非就是开发人员根据不同的环境人肉去修改对应的配置，这种方式简单但却费时，且很容易出错：极其容易出现配置写错或者忘记修改对应环境配置的情况。对于要解放双手的程序员来说，这无疑是一种很low又很低效的方式。这个时候就可以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-08T06:25:10.000Z">
+<meta property="og:updated_time" content="2018-09-08T06:27:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring中加载配置文件的两种方式">
 <meta name="twitter:description" content="前言在实际项目开发中经常会根据不同的环境（dev,pre,online）来配置不同的类或属性，比如说根据不同的环境配置不同的zookeeper或者数据库datasource。最简单的无非就是开发人员根据不同的环境人肉去修改对应的配置，这种方式简单但却费时，且很容易出错：极其容易出现配置写错或者忘记修改对应环境配置的情况。对于要解放双手的程序员来说，这无疑是一种很low又很低效的方式。这个时候就可以">
@@ -363,8 +363,8 @@
 <p>@Data和@ToString是lombok的注解，是为了省去写getter，setter及toString方法的神器，当然还有很多人认为lombok的注解是邪教- -，好吧，这不是咱们今天要说的重点</p>
 <p>可以看到User类中存在三个私有变量，我们的目的就是通过资源文件中的配置来注入到这三个变量中</p>
 <p>那么，我们来建立一个资源文件——user.properties，内容如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#user</span><br><span class="line">user.name = $&#123;test.user.name&#125;</span><br><span class="line">user.city = $&#123;test.user.city&#125;</span><br><span class="line">user.phone = $&#123;test.user.phone&#125;</span><br></pre></td></tr></table></figure>
-<p>其中，<strong>${test.user.name}</strong>、<strong>${test.user.city}</strong>、<strong>${test.user.phone}</strong><br>分别对应环境资源文件中的属性。因为实际项目开发中需要根据不同的环境打包不同的环境资源文件，因此不同的环境都会对应一份环境资源文件，例如dev_config.properties对应线下开发环境，pre_config.properties对应预发环境，online_config.properties对应线上正式环境。以下我们给出线下环境的资源文件（dev_config.properties）配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#user</span><br><span class="line">user.name = $&#123;test.user.name&#125;</span><br><span class="line">user.city = $&#123;test.user.city&#125;</span><br><span class="line">user.phone = $&#123;test.user.phone&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，<strong>${test.user.name}</strong>、<strong>${test.user.city}</strong>、<strong>${test.user.phone}</strong>分别对应环境资源文件中的属性。因为实际项目开发中需要根据不同的环境打包不同的环境资源文件，因此不同的环境都会对应一份环境资源文件，例如dev_config.properties对应线下开发环境，pre_config.properties对应预发环境，online_config.properties对应线上正式环境。以下我们给出线下环境的资源文件（dev_config.properties）配置：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#user</span><br><span class="line">test.user.name = Olive</span><br><span class="line">test.user.city = hangzhou</span><br><span class="line">test.user.phone = 16668815388</span><br></pre></td></tr></table></figure>
 <p>为了让spring可以注入properties文件中的配置，首先需要在xml中配置扫描包下的java文件：  </p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.xxx.xxx.service"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
