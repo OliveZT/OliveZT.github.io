@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Traveling, Coding" />
+  <meta name="keywords" content="BASE64,编码," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="Bad times make a good man.">
-<meta name="keywords" content="traveling, coding, fitness, living">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Olive&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/吐槽/index.html">
+<meta name="description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
+<meta name="keywords" content="BASE64,编码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BASE64编码结果存在“换行符”及解决方案">
+<meta property="og:url" content="http://yoursite.com/2018/09/18/BASE64encode/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="Bad times make a good man.">
+<meta property="og:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-18T10:37:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Olive&#39;s Blog">
-<meta name="twitter:description" content="Bad times make a good man.">
+<meta name="twitter:title" content="BASE64编码结果存在“换行符”及解决方案">
+<meta name="twitter:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/吐槽/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/18/BASE64encode/"/>
 
 
 
 
 
-  <title>Tag: 吐槽 | Olive's Blog</title>
+  <title>BASE64编码结果存在“换行符”及解决方案 | Olive's Blog</title>
   
 
 
@@ -144,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -262,54 +263,195 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>吐槽<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/18/BASE64encode/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Olive">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olive's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/08/08/20180808-sayByeToCSDN/" itemprop="url">
-              
-                <span itemprop="name">正式告别CSDN</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">BASE64编码结果存在“换行符”及解决方案</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-08-08T08:08:08+08:00"
-              content="2018-08-08" >
-          08-08
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T10:24:00+08:00">
+                2018-09-18
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/09/18/BASE64encode/" class="leancloud_visitors" data-flag-title="BASE64编码结果存在“换行符”及解决方案">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多<strong>“换行符”（\t）</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>i</span><br><span class="line">IiwiU2VuZGVyQWRkcmVzcyI6Iua1i+ivleWcsOWdgCIsIlNlbmRlck5hbWUiOiLlvKDkuIkiLCJS</span><br><span class="line">ZWNlaXZlclByb3ZpbmNlIjoi5rGf6IuPIiwiU291cmNlSWQiOiIxMjM0NTYiLCJTZW5kZXJEaXN0</span><br><span class="line">cmljdCI6Iuemj+eUsOWMuiIsIlJlY2VpdmVyTW9iaWxlIjoiMTUyOTk5OTk5OTkiLCJTZW5kZXJQ</span><br><span class="line">cm92aW5jZSI6IuW5v+S4nCIsIlJlY2VpdmVyRGlzdHJpY3QiOiLlp5Hoi4/ljLoiLCJSZWNlaXZl</span><br><span class="line">ckNpdHkiOiLoi4/lt57luIIiLCJSZWNlaXZlck5hbWUiOiLlvKDkuIkiLCJTZW5kZXJNb2JpbGUi</span><br><span class="line">OiIxNTE4ODg4ODg4OCIsIlNlbmRlckNpdHkiOiLmt7HlnLPluIIifQ==</span><br></pre></td></tr></table></figure>
+<h2 id="原因与解决方案"><a href="#原因与解决方案" class="headerlink" title="原因与解决方案"></a>原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>查询了发现在<a href="https://www.ietf.org/rfc/rfc2045.txt" target="_blank" rel="noopener">RFC2045</a>中有这么一段规定： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REQUIRES that encoded lines be no more than 76  characters long.  If longer lines are to be encoded with the Quoted-Printable encoding, &quot;soft&quot; line breaks</span><br></pre></td></tr></table></figure>
+<p>意思就是：BASE64一行不能超过76字符，超过就会添加回车换行符。<br>原因就是这样，下面给出解决方案。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>可以通过在BASE64编码的结果后加上 <strong>.replaceAll(“\r|\n”, “”)</strong> 解决</p>
+<p>ok！done！</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate here!</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://pd4rycnmc.bkt.clouddn.com/wechat.jpg" alt="Olive WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="http://pd4rycnmc.bkt.clouddn.com/alipay.jpg" alt="Olive Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/BASE64/" rel="tag"><i class="fa fa-tag"></i> BASE64</a>
+          
+            <a href="/tags/编码/" rel="tag"><i class="fa fa-tag"></i> 编码</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/08/springLoadProperties/" rel="next" title="Spring中加载配置文件的两种方式">
+                <i class="fa fa-chevron-left"></i> Spring中加载配置文件的两种方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -317,6 +459,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -337,8 +488,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -409,6 +569,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因与解决方案"><span class="nav-number">2.</span> <span class="nav-text">原因与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原因"><span class="nav-number">2.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -645,6 +821,10 @@ $(function() {
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -673,6 +853,17 @@ $(function() {
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
