@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Traveling, Coding" />
+  <meta name="keywords" content="Java,异常,List," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="Bad times make a good man.">
-<meta name="keywords" content="traveling, coding, fitness, living">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Olive&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
+<meta name="keywords" content="Java,异常,List">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+<meta property="og:url" content="http://yoursite.com/2018/10/01/ArraysException/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="Bad times make a good man.">
+<meta property="og:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-06T09:06:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Olive&#39;s Blog">
-<meta name="twitter:description" content="Bad times make a good man.">
+<meta name="twitter:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+<meta name="twitter:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/01/ArraysException/"/>
 
 
 
 
 
-  <title>Olive's Blog</title>
+  <title>Java Arraylist add方法的java.lang.UnsupportedOperationException异常 | Olive's Blog</title>
   
 
 
@@ -144,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -262,9 +262,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -294,9 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/01/ArraysException/" itemprop="url">Java Arraylist add方法的java.lang.UnsupportedOperationException异常</a></h1>
+          <h1 class="post-title" itemprop="name headline">Java Arraylist add方法的java.lang.UnsupportedOperationException异常</h1>
         
 
         <div class="post-meta">
@@ -357,16 +355,19 @@
       
 
       
-        
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在对list进行code的时候抛出了<strong>java.lang.UnsupportedOperationException异常</strong>，且看代码：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/01/ArraysException/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在对list进行code的时候抛出了<strong>java.lang.UnsupportedOperationException异常</strong>，且看代码：</p>
+<a id="more"></a>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlogCaseTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; cityMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] provinceString = &#123;<span class="string">"zhejiang"</span>, <span class="string">"zhejiang"</span>, <span class="string">"shanghai"</span>, <span class="string">"sichuan"</span>&#125;;</span><br><span class="line">        String[] cityString = &#123;<span class="string">"hangzhou"</span>, <span class="string">"jiaxing"</span>, <span class="string">"shanghai"</span>, <span class="string">"chengdu"</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; provinceString.length; i++) &#123;</span><br><span class="line">            cityMapInitialize(provinceString[i], cityString[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cityMapInitialize</span><span class="params">(String province, String city)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(province) || StringUtils.isEmpty(city)) &#123;</span><br><span class="line">            System.out.println(<span class="string">"illegal input province or city"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city + <span class="string">" cityMapInitialize exception! "</span> + e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码很简单，首先定义一个cityMap用来存储“省份-城市”的映射，cityMapInitialize方法用来对cityMap进行初始化或者说赋值，执行main函数后，控制台输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">province: zhejiang city: hangzhou</span><br><span class="line">province: zhejiang city: jiaxing cityMapInitialize exception! java.lang.UnsupportedOperationException</span><br><span class="line">province: shanghai city: shanghai</span><br><span class="line">province: sichuan city: chengdu</span><br></pre></td></tr></table></figure>
+<p>可以看到当执行到“zhejiang-jiaxing”的时候，抛出了异常</p>
+<h2 id="原因与解决方案"><a href="#原因与解决方案" class="headerlink" title="原因与解决方案"></a>原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>原因很简单，请看第19-25行代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure></p>
+<p>当cityMap中没有对应的province时，我们先通过<strong>Arrays.asList</strong>来新建一个list并put到cityMap中，而当cityMap中已经存在此province的映射时，就会取出province对应的list，并将此时的city加入到list中。那么，问题就来了————通过<strong>Arrays.asList</strong>创建的list是<strong>固定大小的ArrayList</strong>。请看Arrays中asList的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a fixed-size list backed by the specified array.  (Changes to</span></span><br><span class="line"><span class="comment">     * the returned list "write through" to the array.)  This method acts</span></span><br><span class="line"><span class="comment">     * as bridge between array-based and collection-based APIs, in</span></span><br><span class="line"><span class="comment">     * combination with &#123;<span class="doctag">@link</span> Collection#toArray&#125;.  The returned list is</span></span><br><span class="line"><span class="comment">     * serializable and implements &#123;<span class="doctag">@link</span> RandomAccess&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;This method also provides a convenient way to create a fixed-size</span></span><br><span class="line"><span class="comment">     * list initialized to contain several elements:</span></span><br><span class="line"><span class="comment">     * &lt;pre&gt;</span></span><br><span class="line"><span class="comment">     *     List&amp;lt;String&amp;gt; stooges = Arrays.asList("Larry", "Moe", "Curly");</span></span><br><span class="line"><span class="comment">     * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; the class of the objects in the array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> a the array by which the list will be backed</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a list view of the specified array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SafeVarargs</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"varargs"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">asList</span><span class="params">(T... a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;(a);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>很简单，创建初始的list时，不要创建如上所述的<strong>固定大小的ArrayList</strong>。如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                cityList.add(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>ok！done！</p>
+
       
     </div>
     
@@ -376,289 +377,74 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate here!</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://pd4rycnmc.bkt.clouddn.com/wechat.jpg" alt="Olive WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="http://pd4rycnmc.bkt.clouddn.com/alipay.jpg" alt="Olive Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/18/BASE64encode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/18/BASE64encode/" itemprop="url">BASE64编码结果存在“换行符”及解决方案</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-18T10:24:00+08:00">
-                2018-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
           
-            
+            <a href="/tags/异常/" rel="tag"><i class="fa fa-tag"></i> 异常</a>
           
-
+            <a href="/tags/List/" rel="tag"><i class="fa fa-tag"></i> List</a>
           
-          
-             <span id="/2018/09/18/BASE64encode/" class="leancloud_visitors" data-flag-title="BASE64编码结果存在“换行符”及解决方案">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多<strong>“换行符”（\t）</strong>：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/18/BASE64encode/#more" rel="contents">
-              Read more &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/18/BASE64encode/" rel="next" title="BASE64编码结果存在“换行符”及解决方案">
+                <i class="fa fa-chevron-left"></i> BASE64编码结果存在“换行符”及解决方案
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/springLoadProperties/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/08/springLoadProperties/" itemprop="url">Spring中加载配置文件的两种方式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-08T10:24:00+08:00">
-                2018-09-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/09/08/springLoadProperties/" class="leancloud_visitors" data-flag-title="Spring中加载配置文件的两种方式">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在实际项目开发中经常会根据不同的环境（dev,pre,online）来配置不同的类或属性，比如说根据不同的环境配置不同的zookeeper或者数据库datasource。最简单的无非就是开发人员根据不同的环境人肉去修改对应的配置，这种方式简单但却费时，且很容易出错：极其容易出现配置写错或者忘记修改对应环境配置的情况。对于要解放双手的程序员来说，这无疑是一种很low又很低效的方式。这个时候就可以用spring读取不同的环境配置文件（比如说zookeeper.properties），然后用maven的多环境打包的方法就可将对应环境的属性注入。配置文件的存在解决了很大一份重复的工作，并且也方便了我们统一管理配置。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/08/springLoadProperties/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -668,557 +454,27 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/04/sqlIndexAndQueryOptimize-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/04/sqlIndexAndQueryOptimize-3/" itemprop="url">mysql索引及查询优化（三）——索引设计概述</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-04T10:24:00+08:00">
-                2018-09-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/09/04/sqlIndexAndQueryOptimize-3/" class="leancloud_visitors" data-flag-title="mysql索引及查询优化（三）——索引设计概述">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。<br>今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/04/sqlIndexAndQueryOptimize-3/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
 
 
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/30/sqlIndexAndQueryOptimize-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/30/sqlIndexAndQueryOptimize-2/" itemprop="url">mysql索引及查询优化（二）——索引概述</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-30T10:24:00+08:00">
-                2018-08-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/08/30/sqlIndexAndQueryOptimize-2/" class="leancloud_visitors" data-flag-title="mysql索引及查询优化（二）——索引概述">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>隔了那么久，终于写了索引及查询优化的第二篇博文，确实用了好长的时间去看书，看博客然后总结。<br>然而，不得不说我之前对sql以及索引相关的知识了解确实甚少（并且在实际中用的也不太多），因此即使补充了一些相关知识， 写出来的文章也会有很多的不足与纰漏。在此也希望从文章中看出有什么不足的朋友可以尽情批评指正～<br>这篇博客主要分三个部分，第一部分简单介绍了索引的概念及类型；第二部分介绍了如何通过Explain指令分析sql；第三部分给出了一些sql的实例。  </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/30/sqlIndexAndQueryOptimize-2/#more" rel="contents">
-              Read more &raquo;
-            </a>
           </div>
-          <!--/noindex-->
-        
-      
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
-  
-  
-  
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/20180808-sayByeToCSDN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/08/20180808-sayByeToCSDN/" itemprop="url">正式告别CSDN</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T08:08:08+08:00">
-                2018-08-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/08/08/20180808-sayByeToCSDN/" class="leancloud_visitors" data-flag-title="正式告别CSDN">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="终于有了自己的博客"><a href="#终于有了自己的博客" class="headerlink" title="终于有了自己的博客"></a>终于有了自己的博客</h2><p><strong>CSDN拜拜👋～</strong><br>无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！<br>BTW，现在终于也搭建了自己的博客～   </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/08/20180808-sayByeToCSDN/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Olive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olive's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" itemprop="url">mysql索引及查询优化（一）——从慢查询实例中开始分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-04T10:24:00+08:00">
-                2018-08-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" class="leancloud_visitors" data-flag-title="mysql索引及查询优化（一）——从慢查询实例中开始分析">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="官方吐槽"><a href="#官方吐槽" class="headerlink" title="官方吐槽"></a>官方吐槽</h2><p><strong>为什么写这个</strong><br>写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。  </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
-
-
-          </div>
-          
-
-
-          
 
         </div>
         
@@ -1239,8 +495,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1311,6 +576,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因与解决方案"><span class="nav-number">2.</span> <span class="nav-text">原因与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原因"><span class="nav-number">2.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1547,6 +828,10 @@ $(function() {
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -1575,6 +860,17 @@ $(function() {
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
+<meta name="description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）：">
 <meta name="keywords" content="BASE64,编码">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BASE64编码结果存在“换行符”及解决方案">
 <meta property="og:url" content="http://yoursite.com/2018/09/18/BASE64encode/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
+<meta property="og:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-18T10:37:07.000Z">
+<meta property="og:updated_time" content="2018-10-06T08:57:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BASE64编码结果存在“换行符”及解决方案">
-<meta name="twitter:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）： 12345671iIiwiU2VuZGVyQWRkcmVz">
+<meta name="twitter:description" content="问题今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多“换行符”（\t）：">
 
 
 
@@ -356,6 +356,7 @@
 
       
         <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>今天与第三方服务器进行http请求交互时，发现传入的signature与服务器signature对不上导致请求失败。后发现是在调用sun.misc包下的BASE64Encoder().encode()方法对字符串“content”进行编码时，编码结果与服务器的标准值对不上。调试后发现本地编码结果中莫名其妙混入了很多<strong>“换行符”（\t）</strong>：</p>
+<a id="more"></a>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>i</span><br><span class="line">IiwiU2VuZGVyQWRkcmVzcyI6Iua1i+ivleWcsOWdgCIsIlNlbmRlck5hbWUiOiLlvKDkuIkiLCJS</span><br><span class="line">ZWNlaXZlclByb3ZpbmNlIjoi5rGf6IuPIiwiU291cmNlSWQiOiIxMjM0NTYiLCJTZW5kZXJEaXN0</span><br><span class="line">cmljdCI6Iuemj+eUsOWMuiIsIlJlY2VpdmVyTW9iaWxlIjoiMTUyOTk5OTk5OTkiLCJTZW5kZXJQ</span><br><span class="line">cm92aW5jZSI6IuW5v+S4nCIsIlJlY2VpdmVyRGlzdHJpY3QiOiLlp5Hoi4/ljLoiLCJSZWNlaXZl</span><br><span class="line">ckNpdHkiOiLoi4/lt57luIIiLCJSZWNlaXZlck5hbWUiOiLlvKDkuIkiLCJTZW5kZXJNb2JpbGUi</span><br><span class="line">OiIxNTE4ODg4ODg4OCIsIlNlbmRlckNpdHkiOiLmt7HlnLPluIIifQ==</span><br></pre></td></tr></table></figure>
 <h2 id="原因与解决方案"><a href="#原因与解决方案" class="headerlink" title="原因与解决方案"></a>原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>查询了发现在<a href="https://www.ietf.org/rfc/rfc2045.txt" target="_blank" rel="noopener">RFC2045</a>中有这么一段规定： </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REQUIRES that encoded lines be no more than 76  characters long.  If longer lines are to be encoded with the Quoted-Printable encoding, &quot;soft&quot; line breaks</span><br></pre></td></tr></table></figure>
@@ -432,6 +433,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/01/ArraysException/" rel="prev" title="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+                Java Arraylist add方法的java.lang.UnsupportedOperationException异常 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -517,7 +522,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -530,7 +535,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
