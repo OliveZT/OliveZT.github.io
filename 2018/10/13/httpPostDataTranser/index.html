@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,异常,List," />
+  <meta name="keywords" content="Apache,Http,post," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
-<meta name="keywords" content="Java,异常,List">
+<meta name="description" content="简介最近与第三方公司作业务对接时，需要我方将数据通过http请求的方式传输到对方接口，我方一直通过将对应的数据对象以“json”的格式放在http请求体中。联调后对方表示一直读不到数据。经过很多方式的探索后发现，对面是用“key-value”的方式在读取数据，怪不得拿不到数据！因为我们的http请求都是通过Apache的Http框架来建立的，接下里我就简单介绍下通过Apache的Http框架，以”">
+<meta name="keywords" content="Apache,Http,post">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
-<meta property="og:url" content="http://yoursite.com/2018/10/01/ArraysException/index.html">
+<meta property="og:title" content="通过Apache的Http框架以&quot;application&#x2F;x-www-form-urlencoded&quot;形式post数据的两种方式">
+<meta property="og:url" content="http://yoursite.com/2018/10/13/httpPostDataTranser/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
+<meta property="og:description" content="简介最近与第三方公司作业务对接时，需要我方将数据通过http请求的方式传输到对方接口，我方一直通过将对应的数据对象以“json”的格式放在http请求体中。联调后对方表示一直读不到数据。经过很多方式的探索后发现，对面是用“key-value”的方式在读取数据，怪不得拿不到数据！因为我们的http请求都是通过Apache的Http框架来建立的，接下里我就简单介绍下通过Apache的Http框架，以”">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-06T09:06:43.000Z">
+<meta property="og:updated_time" content="2018-10-20T08:55:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
-<meta name="twitter:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
+<meta name="twitter:title" content="通过Apache的Http框架以&quot;application&#x2F;x-www-form-urlencoded&quot;形式post数据的两种方式">
+<meta name="twitter:description" content="简介最近与第三方公司作业务对接时，需要我方将数据通过http请求的方式传输到对方接口，我方一直通过将对应的数据对象以“json”的格式放在http请求体中。联调后对方表示一直读不到数据。经过很多方式的探索后发现，对面是用“key-value”的方式在读取数据，怪不得拿不到数据！因为我们的http请求都是通过Apache的Http框架来建立的，接下里我就简单介绍下通过Apache的Http框架，以”">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/01/ArraysException/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/13/httpPostDataTranser/"/>
 
 
 
 
 
-  <title>Java Arraylist add方法的java.lang.UnsupportedOperationException异常 | Olive's Blog</title>
+  <title>通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式 | Olive's Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/01/ArraysException/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/13/httpPostDataTranser/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java Arraylist add方法的java.lang.UnsupportedOperationException异常</h1>
+          <h1 class="post-title" itemprop="name headline">通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-01T10:24:00+08:00">
-                2018-10-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-13T10:24:00+08:00">
+                2018-10-13
               </time>
             
 
@@ -324,7 +324,7 @@
 
           
           
-             <span id="/2018/10/01/ArraysException/" class="leancloud_visitors" data-flag-title="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+             <span id="/2018/10/13/httpPostDataTranser/" class="leancloud_visitors" data-flag-title="通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -355,17 +355,14 @@
       
 
       
-        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在对list进行code的时候抛出了<strong>java.lang.UnsupportedOperationException异常</strong>，且看代码：</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>最近与第三方公司作业务对接时，需要我方将数据通过http请求的方式传输到对方接口，我方一直通过将对应的数据对象以“json”的格式放在http请求体中。联调后对方表示一直读不到数据。经过很多方式的探索后发现，对面是用“key-value”的方式在读取数据，怪不得拿不到数据！<br>因为我们的http请求都是通过Apache的Http框架来建立的，接下里我就简单介绍下通过Apache的Http框架，以”application/x-www-form-urlencoded”形式post数据的两种方式。</p>
 <a id="more"></a>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlogCaseTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; cityMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] provinceString = &#123;<span class="string">"zhejiang"</span>, <span class="string">"zhejiang"</span>, <span class="string">"shanghai"</span>, <span class="string">"sichuan"</span>&#125;;</span><br><span class="line">        String[] cityString = &#123;<span class="string">"hangzhou"</span>, <span class="string">"jiaxing"</span>, <span class="string">"shanghai"</span>, <span class="string">"chengdu"</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; provinceString.length; i++) &#123;</span><br><span class="line">            cityMapInitialize(provinceString[i], cityString[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cityMapInitialize</span><span class="params">(String province, String city)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(province) || StringUtils.isEmpty(city)) &#123;</span><br><span class="line">            System.out.println(<span class="string">"illegal input province or city"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city + <span class="string">" cityMapInitialize exception! "</span> + e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码很简单，首先定义一个cityMap用来存储“省份-城市”的映射，cityMapInitialize方法用来对cityMap进行初始化或者说赋值，执行main函数后，控制台输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">province: zhejiang city: hangzhou</span><br><span class="line">province: zhejiang city: jiaxing cityMapInitialize exception! java.lang.UnsupportedOperationException</span><br><span class="line">province: shanghai city: shanghai</span><br><span class="line">province: sichuan city: chengdu</span><br></pre></td></tr></table></figure>
-<p>可以看到当执行到“zhejiang-jiaxing”的时候，抛出了异常</p>
-<h2 id="原因与解决方案"><a href="#原因与解决方案" class="headerlink" title="原因与解决方案"></a>原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>原因很简单，请看第19-25行代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure></p>
-<p>当cityMap中没有对应的province时，我们先通过<strong>Arrays.asList</strong>来新建一个list并put到cityMap中，而当cityMap中已经存在此province的映射时，就会取出province对应的list，并将此时的city加入到list中。那么，问题就来了————通过<strong>Arrays.asList</strong>创建的list是<strong>固定大小的ArrayList</strong>。请看Arrays中asList的源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a fixed-size list backed by the specified array.  (Changes to</span></span><br><span class="line"><span class="comment">     * the returned list "write through" to the array.)  This method acts</span></span><br><span class="line"><span class="comment">     * as bridge between array-based and collection-based APIs, in</span></span><br><span class="line"><span class="comment">     * combination with &#123;<span class="doctag">@link</span> Collection#toArray&#125;.  The returned list is</span></span><br><span class="line"><span class="comment">     * serializable and implements &#123;<span class="doctag">@link</span> RandomAccess&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;This method also provides a convenient way to create a fixed-size</span></span><br><span class="line"><span class="comment">     * list initialized to contain several elements:</span></span><br><span class="line"><span class="comment">     * &lt;pre&gt;</span></span><br><span class="line"><span class="comment">     *     List&amp;lt;String&amp;gt; stooges = Arrays.asList("Larry", "Moe", "Curly");</span></span><br><span class="line"><span class="comment">     * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; the class of the objects in the array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> a the array by which the list will be backed</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a list view of the specified array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SafeVarargs</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"varargs"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">asList</span><span class="params">(T... a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;(a);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>很简单，创建初始的list时，不要创建如上所述的<strong>固定大小的ArrayList</strong>。如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                cityList.add(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>这里给出示例代码如下：</p>
+<h2 id="两种方案"><a href="#两种方案" class="headerlink" title="两种方案"></a>两种方案</h2><h3 id="1-数据以”json”格式传输"><a href="#1-数据以”json”格式传输" class="headerlink" title="1. 数据以”json”格式传输"></a>1. 数据以”json”格式传输</h3><p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 建立HttpPost对象</span></span><br><span class="line">HttpPost postReq = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line"><span class="comment">// 设置通过contentType和请求数据来建立请求体</span></span><br><span class="line">StringEntity entity = <span class="keyword">new</span> StringEntity(data, ContentType.create(<span class="string">"application/x-www-form-urlencoded"</span>, characterSet));</span><br><span class="line">postReq.setEntity(entity);</span><br><span class="line"><span class="comment">// 以下为http请求的其他配置设置等</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-数据以”key-value”形式传输"><a href="#2-数据以”key-value”形式传输" class="headerlink" title="2. 数据以”key-value”形式传输"></a>2. 数据以”key-value”形式传输</h3><p>键值对的存放需要通过BasicNameValuePair对象来实现</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 建立HttpPost对象</span></span><br><span class="line">HttpPost postReq = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line"><span class="comment">// 建立一个map来存放"key-value"对</span></span><br><span class="line">Map&lt;String,String&gt; parameters =JSON.parseObject(data, Map.class);</span><br><span class="line"><span class="comment">// 新建NameValuePair列表，用来存放键值对</span></span><br><span class="line">List&lt;NameValuePair&gt; NameValuePairList = <span class="keyword">new</span> ArrayList&lt;NameValuePair&gt;();</span><br><span class="line"><span class="keyword">for</span> (String key : parameters.keySet()) &#123;</span><br><span class="line">	NameValuePairList(<span class="keyword">new</span> BasicNameValuePair(key, parameters.get(key)));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 通过UrlEncodedFormEntity将NameValuePairList进行格式化后放入请求体中</span></span><br><span class="line">postReq.setEntity(<span class="keyword">new</span> UrlEncodedFormEntity(NameValuePairList, characterSet));</span><br><span class="line"><span class="comment">// 设置contentType</span></span><br><span class="line">postReq.setHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/x-www-form-urlencoded"</span>);</span><br><span class="line"><span class="comment">// 以下为http请求的其他配置设置等</span></span><br></pre></td></tr></table></figure>
 <p>ok！done！</p>
 
       
@@ -413,11 +410,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+            <a href="/tags/Apache/" rel="tag"><i class="fa fa-tag"></i> Apache</a>
           
-            <a href="/tags/异常/" rel="tag"><i class="fa fa-tag"></i> 异常</a>
+            <a href="/tags/Http/" rel="tag"><i class="fa fa-tag"></i> Http</a>
           
-            <a href="/tags/List/" rel="tag"><i class="fa fa-tag"></i> List</a>
+            <a href="/tags/post/" rel="tag"><i class="fa fa-tag"></i> post</a>
           
         </div>
       
@@ -430,8 +427,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/18/BASE64encode/" rel="next" title="BASE64编码结果存在“换行符”及解决方案">
-                <i class="fa fa-chevron-left"></i> BASE64编码结果存在“换行符”及解决方案
+              <a href="/2018/10/01/ArraysException/" rel="next" title="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+                <i class="fa fa-chevron-left"></i> Java Arraylist add方法的java.lang.UnsupportedOperationException异常
               </a>
             
           </div>
@@ -440,8 +437,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/13/httpPostDataTranser/" rel="prev" title="通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式">
-                通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/20/httpServletResponseDownloadFile/" rel="prev" title="通过HttpServletResponse实现浏览器文件下载及坑点介绍">
+                通过HttpServletResponse实现浏览器文件下载及坑点介绍 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -590,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因与解决方案"><span class="nav-number">2.</span> <span class="nav-text">原因与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原因"><span class="nav-number">2.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种方案"><span class="nav-number">2.</span> <span class="nav-text">两种方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-数据以”json”格式传输"><span class="nav-number">2.1.</span> <span class="nav-text">1. 数据以”json”格式传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-数据以”key-value”形式传输"><span class="nav-number">2.2.</span> <span class="nav-text">2. 数据以”key-value”形式传输</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,异常,List," />
+  <meta name="keywords" content="HttpServletResponse,文件,下载," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
-<meta name="keywords" content="Java,异常,List">
+<meta name="description" content="功能最近在做一个需求————通过一个Controller将相关数据转成csv文件后直接让浏览器下载。思路呢，比较清晰，主要的流程如下：1. 设置响应的ContentType类型2. 设置响应头3. 通过httpServletResponse获取ServletOutputStream对象4. 将需要的数据写到输出流中">
+<meta name="keywords" content="HttpServletResponse,文件,下载">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
-<meta property="og:url" content="http://yoursite.com/2018/10/01/ArraysException/index.html">
+<meta property="og:title" content="通过HttpServletResponse实现浏览器文件下载及坑点介绍">
+<meta property="og:url" content="http://yoursite.com/2018/10/20/httpServletResponseDownloadFile/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
+<meta property="og:description" content="功能最近在做一个需求————通过一个Controller将相关数据转成csv文件后直接让浏览器下载。思路呢，比较清晰，主要的流程如下：1. 设置响应的ContentType类型2. 设置响应头3. 通过httpServletResponse获取ServletOutputStream对象4. 将需要的数据写到输出流中">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-06T09:06:43.000Z">
+<meta property="og:updated_time" content="2018-10-20T08:56:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
-<meta name="twitter:description" content="问题最近在对list进行code的时候抛出了java.lang.UnsupportedOperationException异常，且看代码：">
+<meta name="twitter:title" content="通过HttpServletResponse实现浏览器文件下载及坑点介绍">
+<meta name="twitter:description" content="功能最近在做一个需求————通过一个Controller将相关数据转成csv文件后直接让浏览器下载。思路呢，比较清晰，主要的流程如下：1. 设置响应的ContentType类型2. 设置响应头3. 通过httpServletResponse获取ServletOutputStream对象4. 将需要的数据写到输出流中">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/01/ArraysException/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/20/httpServletResponseDownloadFile/"/>
 
 
 
 
 
-  <title>Java Arraylist add方法的java.lang.UnsupportedOperationException异常 | Olive's Blog</title>
+  <title>通过HttpServletResponse实现浏览器文件下载及坑点介绍 | Olive's Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/01/ArraysException/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/httpServletResponseDownloadFile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java Arraylist add方法的java.lang.UnsupportedOperationException异常</h1>
+          <h1 class="post-title" itemprop="name headline">通过HttpServletResponse实现浏览器文件下载及坑点介绍</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-01T10:24:00+08:00">
-                2018-10-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-20T10:24:00+08:00">
+                2018-10-20
               </time>
             
 
@@ -324,7 +324,7 @@
 
           
           
-             <span id="/2018/10/01/ArraysException/" class="leancloud_visitors" data-flag-title="Java Arraylist add方法的java.lang.UnsupportedOperationException异常">
+             <span id="/2018/10/20/httpServletResponseDownloadFile/" class="leancloud_visitors" data-flag-title="通过HttpServletResponse实现浏览器文件下载及坑点介绍">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -355,17 +355,16 @@
       
 
       
-        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在对list进行code的时候抛出了<strong>java.lang.UnsupportedOperationException异常</strong>，且看代码：</p>
+        <h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>最近在做一个需求————通过一个Controller将相关数据转成csv文件后直接让浏览器下载。思路呢，比较清晰，主要的流程如下：<br><strong>1. 设置响应的ContentType类型</strong><br><strong>2. 设置响应头</strong><br><strong>3. 通过httpServletResponse获取ServletOutputStream对象</strong><br><strong>4. 将需要的数据写到输出流中</strong></p>
 <a id="more"></a>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlogCaseTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; cityMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] provinceString = &#123;<span class="string">"zhejiang"</span>, <span class="string">"zhejiang"</span>, <span class="string">"shanghai"</span>, <span class="string">"sichuan"</span>&#125;;</span><br><span class="line">        String[] cityString = &#123;<span class="string">"hangzhou"</span>, <span class="string">"jiaxing"</span>, <span class="string">"shanghai"</span>, <span class="string">"chengdu"</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; provinceString.length; i++) &#123;</span><br><span class="line">            cityMapInitialize(provinceString[i], cityString[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cityMapInitialize</span><span class="params">(String province, String city)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(province) || StringUtils.isEmpty(city)) &#123;</span><br><span class="line">            System.out.println(<span class="string">"illegal input province or city"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">"province: "</span> + province + <span class="string">" city: "</span> + city + <span class="string">" cityMapInitialize exception! "</span> + e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码很简单，首先定义一个cityMap用来存储“省份-城市”的映射，cityMapInitialize方法用来对cityMap进行初始化或者说赋值，执行main函数后，控制台输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">province: zhejiang city: hangzhou</span><br><span class="line">province: zhejiang city: jiaxing cityMapInitialize exception! java.lang.UnsupportedOperationException</span><br><span class="line">province: shanghai city: shanghai</span><br><span class="line">province: sichuan city: chengdu</span><br></pre></td></tr></table></figure>
-<p>可以看到当执行到“zhejiang-jiaxing”的时候，抛出了异常</p>
-<h2 id="原因与解决方案"><a href="#原因与解决方案" class="headerlink" title="原因与解决方案"></a>原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>原因很简单，请看第19-25行代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = Arrays.asList(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure></p>
-<p>当cityMap中没有对应的province时，我们先通过<strong>Arrays.asList</strong>来新建一个list并put到cityMap中，而当cityMap中已经存在此province的映射时，就会取出province对应的list，并将此时的city加入到list中。那么，问题就来了————通过<strong>Arrays.asList</strong>创建的list是<strong>固定大小的ArrayList</strong>。请看Arrays中asList的源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a fixed-size list backed by the specified array.  (Changes to</span></span><br><span class="line"><span class="comment">     * the returned list "write through" to the array.)  This method acts</span></span><br><span class="line"><span class="comment">     * as bridge between array-based and collection-based APIs, in</span></span><br><span class="line"><span class="comment">     * combination with &#123;<span class="doctag">@link</span> Collection#toArray&#125;.  The returned list is</span></span><br><span class="line"><span class="comment">     * serializable and implements &#123;<span class="doctag">@link</span> RandomAccess&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;This method also provides a convenient way to create a fixed-size</span></span><br><span class="line"><span class="comment">     * list initialized to contain several elements:</span></span><br><span class="line"><span class="comment">     * &lt;pre&gt;</span></span><br><span class="line"><span class="comment">     *     List&amp;lt;String&amp;gt; stooges = Arrays.asList("Larry", "Moe", "Curly");</span></span><br><span class="line"><span class="comment">     * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; the class of the objects in the array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> a the array by which the list will be backed</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a list view of the specified array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SafeVarargs</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"varargs"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">asList</span><span class="params">(T... a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;(a);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>很简单，创建初始的list时，不要创建如上所述的<strong>固定大小的ArrayList</strong>。如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!CollectionUtils.isEmpty(cityMap.get(province))) &#123;</span><br><span class="line">                List&lt;String&gt; cityList = cityMap.get(province);</span><br><span class="line">                cityList.add(city);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                List&lt;String&gt; cityList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                cityList.add(city);</span><br><span class="line">                cityMap.put(province, cityList);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>这里给出示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 下载数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/downloadCSVFile"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">downloadCSVFile</span><span class="params">(HttpServletResponse httpServletResponse)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 设置ContentType</span></span><br><span class="line">            httpServletResponse.setContentType(<span class="string">"application/x-download;charset=utf-8"</span>);</span><br><span class="line">            <span class="comment">// 设置文件名，并指定编码格式</span></span><br><span class="line">            String fileName = URLEncoder.encode(<span class="string">"download_records_"</span> + System.currentTimeMillis() / <span class="number">1000</span> +<span class="string">".csv"</span>, <span class="string">"UTF-8"</span>);</span><br><span class="line">            httpServletResponse.setCharacterEncoding(<span class="string">"UTF-8"</span>);</span><br><span class="line">            <span class="comment">// 将文件名addHeader</span></span><br><span class="line">            httpServletResponse.setHeader(<span class="string">"content-disposition"</span>, <span class="string">"attachment;filename="</span> + fileName);</span><br><span class="line">            </span><br><span class="line">            String message = <span class="string">"test"</span>;</span><br><span class="line"></span><br><span class="line">            InputStream stream = <span class="keyword">new</span> ByteArrayInputStream(message.getBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line"></span><br><span class="line">            OutputStream out = httpServletResponse.getOutputStream();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">byte</span> buff[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((len = stream.read(buff)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                out.write(buff, <span class="number">0</span>, len);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            out.flush();</span><br><span class="line">            out.close();</span><br><span class="line">            stream.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(<span class="string">"download output error!"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>代码很简单，首先我们设置了httpServletResponse的<strong>ContentType为application/x-download</strong>，用于表面我们要传输应用程序数据或者二进制数据。<br>随后设置<strong>response的头为content-disposition</strong>。content-disposition用来对报文体进行描述，规定了客户端的显示处理行为；有两种取值：<strong>attachment和inline</strong>，分别表示保存和直接显示。并且我们设置了文件名及保存的格式<br>然后将我们需要的数据通过写入httpServletResponse中完成我们需要的功能。</p>
+<p>当我们部署好以后，访问controller的域名即可完成下载。</p>
+<p>好了，我知道这么尝试的同学都能顺利成功的。</p>
+<p>那么我想说的问题是什么？<strong>问题是当通过前端的页面进行下载时不会出现文件下载，只会在前端的response中显示我传输的内容；而直接通过网页访问页面是可以正常下载的！</strong></p>
+<h2 id="问题的原因与解决方案"><a href="#问题的原因与解决方案" class="headerlink" title="问题的原因与解决方案"></a>问题的原因与解决方案</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>一开始找原因是极其难的，因为我们根本不知道前端哪里出了问题。后来在一篇文章中（<a href="https://codeday.me/bug/20170321/7550.html" target="_blank" rel="noopener">Javascript/jquery通过POST用JSON数据下载文件</a>）推测了原因：<strong>前端在请求时借用了ajax来进行。但是ajax是不直接支持下载文件的，换而言之，不能直接通过向httpServletResponse写文件流并通过ajax下载！</strong>ajax支持的dataType只有如下几种:：xml、html、script、json、jsonp和text。有了如下推测，直接联系前端同学，问她（对的，是个妹子呢，前端就是妹子多）是不是用了ajax，一贴代码，果然如此～</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p><strong>让前端不要通过ajax请求就好了～so easy～</strong></p>
 <p>ok！done！</p>
 
       
@@ -413,11 +412,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+            <a href="/tags/HttpServletResponse/" rel="tag"><i class="fa fa-tag"></i> HttpServletResponse</a>
           
-            <a href="/tags/异常/" rel="tag"><i class="fa fa-tag"></i> 异常</a>
+            <a href="/tags/文件/" rel="tag"><i class="fa fa-tag"></i> 文件</a>
           
-            <a href="/tags/List/" rel="tag"><i class="fa fa-tag"></i> List</a>
+            <a href="/tags/下载/" rel="tag"><i class="fa fa-tag"></i> 下载</a>
           
         </div>
       
@@ -430,8 +429,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/18/BASE64encode/" rel="next" title="BASE64编码结果存在“换行符”及解决方案">
-                <i class="fa fa-chevron-left"></i> BASE64编码结果存在“换行符”及解决方案
+              <a href="/2018/10/13/httpPostDataTranser/" rel="next" title="通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式">
+                <i class="fa fa-chevron-left"></i> 通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式
               </a>
             
           </div>
@@ -439,10 +438,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/13/httpPostDataTranser/" rel="prev" title="通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式">
-                通过Apache的Http框架以"application/x-www-form-urlencoded"形式post数据的两种方式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -590,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因与解决方案"><span class="nav-number">2.</span> <span class="nav-text">原因与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原因"><span class="nav-number">2.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能"><span class="nav-number">1.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题的原因与解决方案"><span class="nav-number">2.</span> <span class="nav-text">问题的原因与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原因"><span class="nav-number">2.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
             
 
           </div>
