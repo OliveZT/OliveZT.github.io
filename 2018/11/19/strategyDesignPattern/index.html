@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Lambda,Stream,集合,Java8," />
+  <meta name="keywords" content="设计模式,策略," />
 
 
 
@@ -79,18 +79,22 @@
 
 
 
-<meta name="description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
-<meta name="keywords" content="Lambda,Stream,集合,Java8">
+<meta name="description" content="系列关于设计模式，我之前也读过相关书籍（主要是这本《大话设计模式》）。当时边看这本书，边根据书中的一些例子写了一些博客（我的CSDN博客）。这些博客，一者现在看来大多都是流水账；二者因为在实际中运用到的设计模式真的不多（工作经历缺乏），因此也容易遗忘；三者，当初参照的书关于设计模式讲的真的不算太好，对于23种设计模式没有很明确的分类（比如重要性等），举的例子也说不上贴近现实和通俗易懂。那么前段时间">
+<meta name="keywords" content="设计模式,策略">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lambda+Stream对集合进行操作">
-<meta property="og:url" content="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/index.html">
+<meta property="og:title" content="设计模式（一）——策略模式">
+<meta property="og:url" content="http://yoursite.com/2018/11/19/strategyDesignPattern/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
+<meta property="og:description" content="系列关于设计模式，我之前也读过相关书籍（主要是这本《大话设计模式》）。当时边看这本书，边根据书中的一些例子写了一些博客（我的CSDN博客）。这些博客，一者现在看来大多都是流水账；二者因为在实际中运用到的设计模式真的不多（工作经历缺乏），因此也容易遗忘；三者，当初参照的书关于设计模式讲的真的不算太好，对于23种设计模式没有很明确的分类（比如重要性等），举的例子也说不上贴近现实和通俗易懂。那么前段时间">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T05:11:08.000Z">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/%E7%AC%AC%E4%B8%80%E4%BB%A3%E9%B8%AD%E5%AD%90%E6%B8%B8%E6%88%8F.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/%E5%A2%9E%E5%8A%A0%E9%A3%9E%E8%A1%8C%E9%B8%AD%E5%AD%90.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%A1%86%E5%9B%BE.png">
+<meta property="og:updated_time" content="2018-11-20T15:20:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lambda+Stream对集合进行操作">
-<meta name="twitter:description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
+<meta name="twitter:title" content="设计模式（一）——策略模式">
+<meta name="twitter:description" content="系列关于设计模式，我之前也读过相关书籍（主要是这本《大话设计模式》）。当时边看这本书，边根据书中的一些例子写了一些博客（我的CSDN博客）。这些博客，一者现在看来大多都是流水账；二者因为在实际中运用到的设计模式真的不多（工作经历缺乏），因此也容易遗忘；三者，当初参照的书关于设计模式讲的真的不算太好，对于23种设计模式没有很明确的分类（比如重要性等），举的例子也说不上贴近现实和通俗易懂。那么前段时间">
+<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/%E7%AC%AC%E4%B8%80%E4%BB%A3%E9%B8%AD%E5%AD%90%E6%B8%B8%E6%88%8F.png">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/19/strategyDesignPattern/"/>
 
 
 
 
 
-  <title>Lambda+Stream对集合进行操作 | Olive's Blog</title>
+  <title>设计模式（一）——策略模式 | Olive's Blog</title>
   
 
 
@@ -277,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/19/strategyDesignPattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -294,7 +298,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Lambda+Stream对集合进行操作</h1>
+          <h1 class="post-title" itemprop="name headline">设计模式（一）——策略模式</h1>
         
 
         <div class="post-meta">
@@ -306,8 +310,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T10:24:00+08:00">
-                2018-11-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T10:24:00+08:00">
+                2018-11-19
               </time>
             
 
@@ -324,7 +328,7 @@
 
           
           
-             <span id="/2018/11/11/LambdaAndStreamOperate/" class="leancloud_visitors" data-flag-title="Lambda+Stream对集合进行操作">
+             <span id="/2018/11/19/strategyDesignPattern/" class="leancloud_visitors" data-flag-title="设计模式（一）——策略模式">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -355,43 +359,62 @@
       
 
       
-        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Lambda表达式以及stream API是Java8才支持的两个功能。<strong>Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中）</strong>，Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把<strong>真正的函数式编程风格</strong>引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，<strong>Lambda+Stream</strong>的方式一方面确实简化了代码的书写，让代码结构变得比较优雅，但从另一方面来说这样的代码风格，着实不容易看懂。但是随着实际的学习使用，我愈发感觉到这两者结合为开发带来了n多效率与快感！接下来就来探索下这种奇妙的编程style吧！</p>
-<p>P.S. 此文不讲述最基本的lambda以及stream的概念和用法，只粗略的介绍下这种code方式在实际项目开发中的应用</p>
-<a id="more"></a>
-<p>假如有一个姓名的list和一个数字的list：：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;String&gt; nameList = Arrays.asList(<span class="string">"Pony"</span>, <span class="string">"Jack"</span>, <span class="string">"Gay"</span>, <span class="string">"Porsche"</span>, <span class="string">"Aston"</span>, <span class="string">"Maybach”);</span></span><br><span class="line"><span class="string">private static List&lt;Integer&gt; numberList = Arrays.asList(1, 2, 3, 4, 5, 6);</span></span><br></pre></td></tr></table></figure>
-<p>###1. 集合遍历<br>如果要遍历nameList，传统的使用是通过for循环来实现的，如果利用lambda表达式，可以让遍历的代码变得更简洁明了：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 常规方式遍历</span></span><br><span class="line">System.out.println(<span class="string">"************ 以下为常规方式遍历list ************"</span>);</span><br><span class="line"><span class="keyword">for</span> (String name : nameList) &#123;</span><br><span class="line">    System.out.println(<span class="string">"name:"</span> + name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+函数操作 遍历list ************"</span>);</span><br><span class="line"><span class="comment">// Lambda 函数操作</span></span><br><span class="line">nameList.forEach(name -&gt; System.out.println(<span class="string">"name:"</span> + name));</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+双冒号操作符 遍历list ************"</span>);</span><br><span class="line"><span class="comment">// Lambda 双冒号操作符</span></span><br><span class="line">nameList.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为常规方式遍历list ************</span><br><span class="line">name:Pony</span><br><span class="line">name:Jack</span><br><span class="line">name:Gay</span><br><span class="line">name:Porsche</span><br><span class="line">name:Aston</span><br><span class="line">name:Maybach</span><br><span class="line">************ 以下为Lambda+函数操作 遍历list ************</span><br><span class="line">name:Pony</span><br><span class="line">name:Jack</span><br><span class="line">name:Gay</span><br><span class="line">name:Porsche</span><br><span class="line">name:Aston</span><br><span class="line">name:Maybach</span><br><span class="line">************ 以下为Lambda+双冒号操作符 遍历list ************</span><br><span class="line">Pony</span><br><span class="line">Jack</span><br><span class="line">Gay</span><br><span class="line">Porsche</span><br><span class="line">Aston</span><br><span class="line">Maybach</span><br></pre></td></tr></table></figure></p>
-<p>可以看到运用了lambda表达式的遍历代码变的短小精悍。另外，我们先是用常用的箭头语法（-&gt;）创建 Lambda 表达式，然后还用了 Java 8 全新的双冒号操作符（::）。但是从输出结果上来看，<strong>双冒号操作符尽管简单，但却缺乏灵活及弹性</strong>。</p>
-<p>###2. filter()过滤</p>
-<p>我们使用stream中的filter过滤器来过滤得到以”P”为开头的姓名：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list ************"</span>);</span><br><span class="line">nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).forEach(name -&gt; System.out.println(<span class="string">"start with P: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list ************</span><br><span class="line">start with P: Pony</span><br><span class="line">start with P: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>值得注意的是，stream的filter功能是<strong>“正向”</strong>的过滤，也就是说，是将<strong>符合filter内条件的数据“过滤”出来，而不是“排除”这些数据</strong>。</p>
-<p>###3. collect()方法</p>
-<p>我们可以使用 collect 方法来将我们的结果集放到一个list，字符串， Set中:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list 并输出为新的list ************"</span>);</span><br><span class="line">List&lt;String&gt; filterNameList = nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).collect(Collectors.toList());</span><br><span class="line">filterNameList.forEach(name -&gt; System.out.println(<span class="string">"filterName:"</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list 并输出为新的list ************</span><br><span class="line">filterName:Pony</span><br><span class="line">filterName:Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###4. limit()限制结果集数目</p>
-<p>我们不想要全部的结果集，只需要前面几行怎么办？easy，limit来帮忙！使用limit可以灵活限制结果集数目：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list 并用limit 限制结果集数目 ************"</span>);</span><br><span class="line">nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).limit(<span class="number">1</span>).forEach(name -&gt; System.out.println(<span class="string">"start with P: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list 并用limit 限制结果集数目 ************</span><br><span class="line">start with P: Pony</span><br></pre></td></tr></table></figure></p>
-<p>###5. sorted()排序</p>
-<p>可以看到，现在的nameList是无序的，使用sorted就可以进行简洁又灵活的排序了！我们来对nameList按照姓名的字典序进行排序吧：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 通过名字的字典序对list排序 ************"</span>);</span><br><span class="line">nameList.stream().sorted((name1, name2) -&gt; (name1.compareTo(name2))).forEach(name -&gt; System.out.println(<span class="string">"sorted name: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 通过名字的字典序对list排序 ************</span><br><span class="line">sorted name: Aston</span><br><span class="line">sorted name: Gay</span><br><span class="line">sorted name: Jack</span><br><span class="line">sorted name: Maybach</span><br><span class="line">sorted name: Pony</span><br><span class="line">sorted name: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###6. min()和max()得到最小值及最大值</p>
-<p>如果要获取排序后的最小值（序号最小）或最大值（序号最大）呢？使用min和max吧！</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 通过名字的字典序对list排序 后分别取出第一个及最后一个name ************"</span>);</span><br><span class="line">String minName = nameList.stream().min((name1, name2) -&gt; (name1.compareTo(name2))).get();</span><br><span class="line">String maxName = nameList.stream().max((name1, name2) -&gt; (name1.compareTo(name2))).get();</span><br><span class="line">System.out.println(<span class="string">"minName: "</span> + minName + <span class="string">", maxName: "</span> + maxName);</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 通过名字的字典序对list排序 后分别取出第一个及最后一个name ************</span><br><span class="line">minName: Aston, maxName: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###7. map()来完成对stream中值的转换</p>
-<p>对于numberList，我们要如何对其中每一个数进行平方运算呢？我们将 Lambda 表达式 x -&gt; x * x 传给 map() 方法，来对numberList中每一个元素进行操作。然后再打印看看吧：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// map将流中的一个值转换成一个新的值</span></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算 ************"</span>);</span><br><span class="line">numberList.stream().map(x -&gt; x * x).forEach(System.out::println);</span><br><span class="line">```Java</span><br><span class="line"></span><br><span class="line">输出结果如下：</span><br></pre></td></tr></table></figure>
-<p><strong><strong><em>**</em></strong></strong> 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算 <strong><strong><em>**</em></strong></strong><br>1<br>4<br>9<br>16<br>25<br>36<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">###8. reduce()生成新的值</span><br><span class="line"></span><br><span class="line">对numberList中所有元素进行平方运算后，如果我们需要得到它们的和呢？我们使用 reduce() 将所有元素求和生成一个新的值：</span><br><span class="line"></span><br><span class="line">```Java</span><br><span class="line">System.out.println(&quot;************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算后 并用reduce生成新的值 ************&quot;);</span><br><span class="line">Integer newSum = numberList.stream().map(x -&gt; x * x).reduce((x, y) -&gt; x + y).get();</span><br><span class="line">System.out.println(&quot;newSum: &quot; + newSum);</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算后 并用reduce生成新的值 ************</span><br><span class="line">newSum: <span class="number">91</span></span><br></pre></td></tr></table></figure></p>
-<p>以上只是介绍了Lambda+Stream对集合操作的一些简单的入门实践，希望能对你有帮助，也希望我们能在合适的地方灵活得运用它们～</p>
-<p>就是这样！希望你喜欢～</p>
+        <h2 id="系列"><a href="#系列" class="headerlink" title="系列"></a>系列</h2><p>关于设计模式，我之前也读过相关书籍（主要是这本《大话设计模式》）。当时边看这本书，边根据书中的一些例子写了一些博客（<a href="https://blog.csdn.net/Olive_ZT" target="_blank" rel="noopener">我的CSDN博客</a>）。这些博客，一者现在看来大多都是流水账；二者因为在实际中运用到的设计模式真的不多（工作经历缺乏），因此也容易遗忘；三者，当初参照的书关于设计模式讲的真的不算太好，对于23种设计模式没有很明确的分类（比如重要性等），举的例子也说不上贴近现实和通俗易懂。<br>那么前段时间（大概是618的时候），我买了一本《Head First设计模式》并且读完。这本书就我来看，水平以及对我的帮助是要高于上一本书的。并且在工作中，也确实感觉到了有熟悉设计模式的必要，因此看完后，我也生出了重新写一遍设计模式的念头。<br>以下，便是要介绍的第一个设计模式——策略模式</p>
+ <a id="more"></a>
+<h2 id="Ⅰ-什么是策略模式"><a href="#Ⅰ-什么是策略模式" class="headerlink" title="Ⅰ. 什么是策略模式"></a>Ⅰ. 什么是策略模式</h2><p>  策略模式就是定义一系列的算法，并将它们分别封装起来，使他们可以相互替换。<strong>策略模式使得算法以独立于客户而变化</strong>。<br>策略模式涉及到以下几个角色：</p>
+<p> <strong>1. 抽象策略角色：</strong>定义了具体策略需要实现的抽象方法或接口</p>
+<p> <strong>2. 具体策略角色：</strong>封装具体的算法</p>
+<p> <strong>3. 客户角色：</strong>内部持有策略类对象的引用</p>
+<p>不明白没关系，来个例子就都清晰了～</p>
+<h2 id="Ⅱ-举个例子"><a href="#Ⅱ-举个例子" class="headerlink" title="Ⅱ. 举个例子"></a>Ⅱ. 举个例子</h2><p>以书中的“模拟鸭子游戏”为案例来具体讲述下这个模式～</p>
+<p>背景的这样的：</p>
+<p>尼古拉斯·赵四是balabala公司的一名程序员。最近PM让他做一款“鸭子游戏”（很正经的游戏，游戏者可以选择不同的鸭子控制它叫或者让它游泳之类的，不过大概可能只有小朋友会玩吧 XD）。<br>需求第一期要求做一个让鸭子叫的功能，赵四按照正常的设计逻辑，首先设计了一个鸭子Duck的超类（嗯～赵四是一个有基础OO素养的coder），在Duck类中他写了一个<strong>非抽象的</strong>quack方法（因为鸭子都会叫，那么这部分交给父类去完成）；然后还有一个<strong>抽象</strong>的display方法（毕竟不同种类的鸭子长得不一样嘛！），就像下面这样：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/%E7%AC%AC%E4%B8%80%E4%BB%A3%E9%B8%AD%E5%AD%90%E6%B8%B8%E6%88%8F.png" alt="image"></p>
+<p>确定了设计方案以后，他设计了很多个类并且继承了Duck超类：普通鸭子，橡皮鸭子，绿头鸭，鸳鸯……他一口气写了这么多的类，但是好歹是完成了PM的需求，正想休息会。PM说“赵四呀，我们现在要给鸭子加上飞行的feature”。<br>赵四：“加需求是不可能加的，这辈子都不可能加。我要是加，我赵四就从这跳下去！”<br>PM：“我替hr和你说一声，明天去财务室报道”<br>赵四：“我马上加班做！”<br>赵四想，也挺简单嘛，在Duck类中加一个<strong>非抽象的</strong>fly方法就好了嘛！鸭子们都给我飞起来！  </p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/%E5%A2%9E%E5%8A%A0%E9%A3%9E%E8%A1%8C%E9%B8%AD%E5%AD%90.png" alt="image"></p>
+<p>5min后，测试妹子一脸便秘的来找赵四，“赵四，你脑子坏了么？？橡皮鸭子满屏幕地飞！”<br>赵四：“我….”<br>测试：“你什么你！赶紧改！”<br>赵四看了下自己的设计逻辑，一下就找到了问题——并不是所有的鸭子都会飞，如果把飞行的行为加到父类中去实现，那就导致某些不适合该行为的子类也具有了飞行的功能。<br>那应该怎么样做呢？<br>赵四想到设计模式大师给他介绍过的一个设计模式——策略模式，感觉用在这个地方很合适啊！<br>于是他将“鸭子游戏”系统通过策略模式进行修改：  </p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%A1%86%E5%9B%BE.png" alt="image"></p>
+<ol>
+<li>首先构建鸭子的“飞行”行为接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FlyBehavior</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么，我们可以通过实现FlyBehavior接口来创建不同的飞行行为</p>
+<ol start="2">
+<li>然后构建鸭子的“呱呱叫”行为接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">QuackBehavior</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>建立一个鸭子的抽象类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Duck</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> FlyBehavior flyBehavior;</span><br><span class="line">    <span class="keyword">protected</span> QuackBehavior quackBehavior;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">performFly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        flyBehavior.fly();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">performQuack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        quackBehavior.quack();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFlyBehavior</span><span class="params">(FlyBehavior flyBehavior)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.flyBehavior = flyBehavior;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setQuackBehavior</span><span class="params">(QuackBehavior quackBehavior)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.quackBehavior = quackBehavior;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是“鸭子”的抽象类，这里有一个“小心机”，在Duck类中持有着对FlyBehavior以及QuackBehavior接口的引用，并且有setter方法，那么我们就可以在使用的过程中“动态”地设定鸭子🦆的行为了！</p>
+<ol start="4">
+<li>接下来是什么？来实现FlyBehavior吧</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyWithWings</span> <span class="keyword">implements</span> <span class="title">FlyBehavior</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can fly! Flying with wings!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是一个“会飞”（而且是用翅膀飞）的飞行行为实现，再来一个“不会飞”的飞行行为（橡皮鸭子就不会飞对吧）！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CanNotFly</span> <span class="keyword">implements</span> <span class="title">FlyBehavior</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Fuck! I can't fly!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>继续建立两个QuackBehavior的实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Quack</span> <span class="keyword">implements</span> <span class="title">QuackBehavior</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Quack! Quack! Quack!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这是是正常鸭子的叫声（”Quack! Quack! Quack!”），接下来建立一个“咩咩咩”叫的鸭子叫行为（高贵的赵四表示他也不知道为什么会有鸭子是咩咩叫的 - -）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MewQuack</span> <span class="keyword">implements</span> <span class="title">QuackBehavior</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Mew! Mew! Mew!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>接下来来建立两只不同的鸭子来做模拟！</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RubberDuck</span> <span class="keyword">extends</span> <span class="title">Duck</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hi! It's a RubberDuck!"</span>);</span><br><span class="line">        performFly();</span><br><span class="line">        performQuack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一只鸭子是一只橡皮鸭子，赵四觉得还需要一只“正常”的鸭子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NormalDuck</span> <span class="keyword">extends</span> <span class="title">Duck</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hi! It's a NormalDuck!"</span>);</span><br><span class="line">        performFly();</span><br><span class="line">        performQuack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>最后，最后来建立一个鸭子游戏模拟器，来模拟下！</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DuckGameSimulator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        FlyBehavior flyWithWings = <span class="keyword">new</span> FlyWithWings();</span><br><span class="line">        FlyBehavior cantNotFly = <span class="keyword">new</span> CanNotFly();</span><br><span class="line"></span><br><span class="line">        QuackBehavior quack = <span class="keyword">new</span> Quack();</span><br><span class="line">        QuackBehavior mew = <span class="keyword">new</span> MewQuack();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"************* Duck 1 *************"</span> + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        Duck rubberDuck = <span class="keyword">new</span> RubberDuck();</span><br><span class="line">        rubberDuck.setFlyBehavior(cantNotFly);</span><br><span class="line">        rubberDuck.setQuackBehavior(mew);</span><br><span class="line">        rubberDuck.display();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"\n"</span> + <span class="string">"************* Duck 2 *************"</span> + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        Duck normalDuck = <span class="keyword">new</span> NormalDuck();</span><br><span class="line">        normalDuck.setFlyBehavior(flyWithWings);</span><br><span class="line">        normalDuck.setQuackBehavior(quack);</span><br><span class="line">        normalDuck.display();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>看下输出的结果！</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">************* Duck <span class="number">1</span> *************</span><br><span class="line"></span><br><span class="line">Hi! It<span class="string">'s a RubberDuck!</span></span><br><span class="line"><span class="string">Fuck! I can'</span>t fly!</span><br><span class="line">Mew! Mew! Mew!</span><br><span class="line"></span><br><span class="line">************* Duck <span class="number">2</span> *************</span><br><span class="line"></span><br><span class="line">Hi! It<span class="string">'s a NormalDuck!</span></span><br><span class="line"><span class="string">I can fly! Flying with wings!</span></span><br><span class="line"><span class="string">Quack! Quack! Quack!</span></span><br></pre></td></tr></table></figure>
+<h2 id="Ⅳ-总结"><a href="#Ⅳ-总结" class="headerlink" title="Ⅳ. 总结"></a>Ⅳ. 总结</h2><p>设计原则：将应用中变化的部分与固定的部分分离，并把“变化”进行封装，从而不影响应用其他的部分。这样就让系统的耦合降低，系统将更有弹性。</p>
 
       
     </div>
@@ -438,13 +461,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Lambda/" rel="tag"><i class="fa fa-tag"></i> Lambda</a>
+            <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
           
-            <a href="/tags/Stream/" rel="tag"><i class="fa fa-tag"></i> Stream</a>
-          
-            <a href="/tags/集合/" rel="tag"><i class="fa fa-tag"></i> 集合</a>
-          
-            <a href="/tags/Java8/" rel="tag"><i class="fa fa-tag"></i> Java8</a>
+            <a href="/tags/策略/" rel="tag"><i class="fa fa-tag"></i> 策略</a>
           
         </div>
       
@@ -457,8 +476,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/24/readResourceCSVFile/" rel="next" title="Java从Resource中读取.csv文件并进行处理">
-                <i class="fa fa-chevron-left"></i> Java从Resource中读取.csv文件并进行处理
+              <a href="/2018/11/11/LambdaAndStreamOperate/" rel="next" title="Lambda+Stream对集合进行操作">
+                <i class="fa fa-chevron-left"></i> Lambda+Stream对集合进行操作
               </a>
             
           </div>
@@ -466,10 +485,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/19/strategyDesignPattern/" rel="prev" title="设计模式（一）——策略模式">
-                设计模式（一）——策略模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -617,7 +632,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#系列"><span class="nav-number">1.</span> <span class="nav-text">系列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅰ-什么是策略模式"><span class="nav-number">2.</span> <span class="nav-text">Ⅰ. 什么是策略模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅱ-举个例子"><span class="nav-number">3.</span> <span class="nav-text">Ⅱ. 举个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅳ-总结"><span class="nav-number">4.</span> <span class="nav-text">Ⅳ. 总结</span></a></li></ol></div>
             
 
           </div>
