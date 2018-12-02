@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="随便写写,吐槽," />
+  <meta name="keywords" content="设计模式,观察者模式," />
 
 
 
@@ -79,20 +79,18 @@
 
 
 
-<meta name="description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～">
-<meta name="keywords" content="随便写写,吐槽">
+<meta name="description" content="背景尼古拉斯·赵四的同学本尼迪·李云在互联网气象站公司工作，最近他们公司要做一个气象监测的应用。这个应用需要能监控现在的天气状况，指标主要有以下三种：温度，湿度以及气压。并且应用有三块面板可以分别显示目前的天气状况、气象数据统计以及天气预报。当天气情况变化时，三块面板必须根据各自的指标实时更新。赵四拿到这个需求，并拿到了一个WeatherData对象，这个对象是气象站提供的，可以用来获取到温度，湿">
+<meta name="keywords" content="设计模式,观察者模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="正式告别CSDN">
-<meta property="og:url" content="http://yoursite.com/2018/08/08/20180808-sayByeToCSDN/index.html">
+<meta property="og:title" content="设计模式（二）——观察者模式">
+<meta property="og:url" content="http://yoursite.com/2018/12/01/observerDesignPattern/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～">
+<meta property="og:description" content="背景尼古拉斯·赵四的同学本尼迪·李云在互联网气象站公司工作，最近他们公司要做一个气象监测的应用。这个应用需要能监控现在的天气状况，指标主要有以下三种：温度，湿度以及气压。并且应用有三块面板可以分别显示目前的天气状况、气象数据统计以及天气预报。当天气情况变化时，三块面板必须根据各自的指标实时更新。赵四拿到这个需求，并拿到了一个WeatherData对象，这个对象是气象站提供的，可以用来获取到温度，湿">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/12.jpg">
-<meta property="og:updated_time" content="2018-08-18T02:16:13.000Z">
+<meta property="og:updated_time" content="2018-12-02T13:15:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="正式告别CSDN">
-<meta name="twitter:description" content="终于有了自己的博客CSDN拜拜👋～无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！BTW，现在终于也搭建了自己的博客～">
-<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/12.jpg">
+<meta name="twitter:title" content="设计模式（二）——观察者模式">
+<meta name="twitter:description" content="背景尼古拉斯·赵四的同学本尼迪·李云在互联网气象站公司工作，最近他们公司要做一个气象监测的应用。这个应用需要能监控现在的天气状况，指标主要有以下三种：温度，湿度以及气压。并且应用有三块面板可以分别显示目前的天气状况、气象数据统计以及天气预报。当天气情况变化时，三块面板必须根据各自的指标实时更新。赵四拿到这个需求，并拿到了一个WeatherData对象，这个对象是气象站提供的，可以用来获取到温度，湿">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/08/20180808-sayByeToCSDN/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/01/observerDesignPattern/"/>
 
 
 
 
 
-  <title>正式告别CSDN | Olive's Blog</title>
+  <title>设计模式（二）——观察者模式 | Olive's Blog</title>
   
 
 
@@ -279,7 +277,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/20180808-sayByeToCSDN/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/observerDesignPattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -296,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">正式告别CSDN</h1>
+          <h1 class="post-title" itemprop="name headline">设计模式（二）——观察者模式</h1>
         
 
         <div class="post-meta">
@@ -308,8 +306,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T08:08:08+08:00">
-                2018-08-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T10:24:00+08:00">
+                2018-12-01
               </time>
             
 
@@ -326,7 +324,7 @@
 
           
           
-             <span id="/2018/08/08/20180808-sayByeToCSDN/" class="leancloud_visitors" data-flag-title="正式告别CSDN">
+             <span id="/2018/12/01/observerDesignPattern/" class="leancloud_visitors" data-flag-title="设计模式（二）——观察者模式">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -357,28 +355,70 @@
       
 
       
-        <h2 id="终于有了自己的博客"><a href="#终于有了自己的博客" class="headerlink" title="终于有了自己的博客"></a>终于有了自己的博客</h2><p><strong>CSDN拜拜👋～</strong><br>无数次被csdn蠢哭！一是愚蠢的人工审核方式；二是捉急的app后台，老奔溃。老实说，之前12306是我见过的最傻最蠢的app！好了，csdn刷新我记录了。现在我把这个title颁给您！请您务必接受！<br>BTW，现在终于也搭建了自己的博客～   </p>
-<a id="more"></a>
-<p><a href="http://blog4olive.top" target="_blank" rel="noopener">blog4olive.top</a><br>域名不算好听（穷困的我这辈子都买不起好听的域名！可以考虑给我众筹。刚好添加了打赏功能，文章末尾即可看到！），但胜在简单明了对吧？  </p>
-<p><strong>关于博客更新</strong>  </p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>尼古拉斯·赵四的同学本尼迪·李云在互联网气象站公司工作，最近他们公司要做一个气象监测的应用。这个应用需要能监控现在的天气状况，指标主要有以下三种：温度，湿度以及气压。并且应用有三块面板可以分别显示目前的天气状况、气象数据统计以及天气预报。当天气情况变化时，三块面板必须根据各自的指标实时更新。<br>赵四拿到这个需求，并拿到了一个WeatherData对象，这个对象是气象站提供的，可以用来获取到温度，湿度以及气压三个指标（换而言之，他根不需要关注这三个指标是如何获取到的，只需要通过WeatherData对象的getter方法即可拿到对应指标的值）。另外，他也并不需要关注气象数据的统计算法以及天气预报的算法，这些算法都有现成的接口可以调用。因此，他拿到指标以后，他只需要将对应的值放到对应的面板上进行显示就好了。那么中间最重要的一步——面板如何感知到三个指标的变化并及时作出回应？</p>
+ <a id="more"></a>
+<h2 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h2><p>  最简单的当然是党天气数据变化时，在WeatherData中分别调用三个面板的接口方法进行改变了。然而这种简单的做法也带来了一些不太好的影响——比如说破坏了WeatherData的封装；每一次删除或者增加一个面板时都会对WeatherData类进行操作，这种方式让面板对象与WeatherData对象的耦合太紧了……赵四为此头发都掉了1256根，人也日渐消瘦，公司的资深程序员里斯本·二狗子于心不忍，向赵四提出了一个建议，为什么不考虑考虑使用<strong>观察者模式</strong>呢？<br>  赵四一脸懵逼，很认真的向二狗子请教，什么是<strong>观察者模式</strong>？<br>  二狗子邪魅一笑，转身偷偷上谷歌，然后说道：<br>  <strong>观察者模式</strong>又叫<strong>发布订阅模式</strong>，定义了对象间一对多的依赖关系。当一个对象状态发生变化，其他依赖于这个对象的依赖者们都会被通知，然后自动更新。举个栗子，当我们关注了某个人的博客（相当于订阅），当此博客有更新（发布了新文章），那么关注此博客的用户都会收到类似“您关注的博客有更新”这样的消息。诸如此类的模式就是观察者。<br>  赵四一想，诶？这个模式听起来确实很符合现在的需求呀！<br>  赵四也上网继续搜索与策略模式相关的资料，发现了观察者模式的类图：</p>
+<p>// 本来有个类图的，然而坑爹的七牛云把我图床的测试域名回收了，接下来要想用就必须备案绑定了，慢慢来吧。。。懒 - -</p>
+<p> <strong>1. 抽象主题：</strong>主题中包含了观察者的集合。并提供添加，删除以及通知观察者的接口</p>
+<p> <strong>2. 具体主题对象：</strong>继承至抽象主题，用一个Vector存储观察者，内部维护了一个状态量，当状态发生改变，就向观察者进行通知。</p>
+<p> <strong>3. 抽象观察者：</strong>内部有update方法。这是为主题发生改变时需要获得通知的对象所建立的一个更新接口</p>
+<p>  <strong>4. 具体观察者对象：</strong>实现了抽象观察者的接口</p>
+<h2 id="设计方案"><a href="#设计方案" class="headerlink" title="设计方案"></a>设计方案</h2><p><strong>观察者模式</strong>定义了对象间一对多的依赖关系。WeatherData对象在这里就是“一”，而那些显示指标的面板就是“多”。回到上面赵四的疑问：如何感知到三个指标的变化并及时作出回应？从上面观察者模式的类图，如果把WeatherData对象当作主题，把三个面板当作观察者，面板要显示信息，就要向主题进行注册。那这样WeatherData对象就知道面板的存在了，那当天气指标变化时，WeatherData就可以调用面板的某个方法来通知面板观测值了。</p>
 <ol>
-<li>增加了文章pv    </li>
-<li>博客pv的显示  </li>
-<li>页脚icon等的优化  </li>
-<li>文章结构显示  </li>
-<li>文章搜索功能  </li>
-<li>打赏  </li>
+<li>首先构建WeatherData主题类</li>
 </ol>
-<p><strong>TODO:</strong>   </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeatherData</span> <span class="keyword">extends</span> <span class="title">Observable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> temperature;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> humidity;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> pressure;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measurementsChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setChanged();</span><br><span class="line">        notifyObservers();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMeasurements</span><span class="params">(<span class="keyword">float</span> temperature, <span class="keyword">float</span> humidity, <span class="keyword">float</span> pressure)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.temperature = temperature;</span><br><span class="line">        <span class="keyword">this</span>.humidity = humidity;</span><br><span class="line">        <span class="keyword">this</span>.pressure = pressure;</span><br><span class="line">        measurementsChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getTemperature</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> temperature;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getHumidity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> humidity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getPressure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> pressure;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到WeatherData继承了Observable类，Observable是Java为观察者模式提供的抽象主题类（即Subject）。<br>我们可以看到在measurementsChanged方法中调用了两个继承至Observable类的方法：  </p>
+<ul>
+<li>setChanged()：</li>
+</ul>
+<p>来看下setChanged方法的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Marks this &lt;tt&gt;Observable&lt;/tt&gt; object as having been changed; the</span></span><br><span class="line"><span class="comment">     * &lt;tt&gt;hasChanged&lt;/tt&gt; method will now return &lt;tt&gt;true&lt;/tt&gt;.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        changed = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>setChanged方法很简单，就是将changed变量至为true（默认为false）。至于changed标志位有什么用，请看第二个方法。</p>
+<ul>
+<li>notifyObservers()：</li>
+</ul>
+<p>首先notifyObservers()内部调用了另一个重载的notifyObservers方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyObservers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        notifyObservers(<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看下真实的方法实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * If this object has changed, as indicated by the</span></span><br><span class="line"><span class="comment">     * &lt;code&gt;hasChanged&lt;/code&gt; method, then notify all of its observers</span></span><br><span class="line"><span class="comment">     * and then call the &lt;code&gt;clearChanged&lt;/code&gt; method to indicate</span></span><br><span class="line"><span class="comment">     * that this object has no longer changed.</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * Each observer has its &lt;code&gt;update&lt;/code&gt; method called with two</span></span><br><span class="line"><span class="comment">     * arguments: this observable object and the &lt;code&gt;arg&lt;/code&gt; argument.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>   arg   any object.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span>     java.util.Observable#clearChanged()</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span>     java.util.Observable#hasChanged()</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span>     java.util.Observer#update(java.util.Observable, java.lang.Object)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyObservers</span><span class="params">(Object arg)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * a temporary array buffer, used as a snapshot of the state of</span></span><br><span class="line"><span class="comment">         * current Observers.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Object[] arrLocal;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="comment">/* We don't want the Observer doing callbacks into</span></span><br><span class="line"><span class="comment">             * arbitrary code while holding its own Monitor.</span></span><br><span class="line"><span class="comment">             * The code where we extract each Observable from</span></span><br><span class="line"><span class="comment">             * the Vector and store the state of the Observer</span></span><br><span class="line"><span class="comment">             * needs synchronization, but notifying observers</span></span><br><span class="line"><span class="comment">             * does not (should not).  The worst result of any</span></span><br><span class="line"><span class="comment">             * potential race-condition here is that:</span></span><br><span class="line"><span class="comment">             * 1) a newly-added Observer will miss a</span></span><br><span class="line"><span class="comment">             *   notification in progress</span></span><br><span class="line"><span class="comment">             * 2) a recently unregistered Observer will be</span></span><br><span class="line"><span class="comment">             *   wrongly notified when it doesn't care</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">if</span> (!changed)</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            arrLocal = obs.toArray();</span><br><span class="line">            clearChanged();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = arrLocal.length-<span class="number">1</span>; i&gt;=<span class="number">0</span>; i--)</span><br><span class="line">            ((Observer)arrLocal[i]).update(<span class="keyword">this</span>, arg);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以changed标志位置为true才可以在接下来的notifyObservers()方法中通知观察者进行更新。</p>
+<p>可以看到，在遍历数组arrLocal通知观察者进行update操作的时候是不“同步的”，因此此方法也存在两个问题（如此段代码的注释）：1. 因为遍历观察者的方法不做同步，所以在同步方法后新加入的观察者，将会错过此次正在进行的通知 2. 同理，最近被删除的观察者也会被错误地通知。而此时，这个观察者已经不关注这个主题了。</p>
+<ol start="2">
+<li>面板显示的接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DisplayPanel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>DisplayPanel接口中只有一个方法，即用来显示一些数据。每个不同的面板都会实现这个接口。</p>
+<ol start="3">
+<li>实时天气面板实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeatherCurrentDisplay</span> <span class="keyword">implements</span> <span class="title">Observer</span>,<span class="title">DisplayPanel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Observable observable;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> temperature;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> humidity;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> pressure;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeatherCurrentDisplay</span><span class="params">(Observable observable)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.observable = observable;</span><br><span class="line">        observable.addObserver(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Observable obs, Object arg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (obs <span class="keyword">instanceof</span> WeatherData) &#123;</span><br><span class="line">            WeatherData weatherData = (WeatherData) obs;</span><br><span class="line">            <span class="keyword">this</span>.temperature = weatherData.getTemperature();</span><br><span class="line">            <span class="keyword">this</span>.humidity = weatherData.getHumidity();</span><br><span class="line">            <span class="keyword">this</span>.pressure = weatherData.getPressure();</span><br><span class="line">            display();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"weather temperature:"</span> + temperature</span><br><span class="line">                + <span class="string">", humidity:"</span> + humidity + <span class="string">", pressure:"</span> + pressure);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>WeatherCurrentDisplay类不仅实现了DisplayPanel接口，还实现了Observer接口。与Observable类似，Observer接口同样是Java对观察者模式的支持。<br>可以看到在WeatherCurrentDisplay的构造器中，将“主题”元素作为入参传入了观察者中，并调用主题的<strong>addObserver()</strong>方法，将WeatherCurrentDisplay对象注册到了主题中。<br>另外，在上面的WeatherData类中我们调用了Observable的notifyObservers方法，内部就会对注册到主题内的观察者进行<strong>update()</strong>，而在WeatherCurrentDisplay类中便覆盖（override）了Observer接口的update()方法，具体的实现就是调用了<strong>display()</strong>方法，对改变的天气指标进行显示。</p>
+<ol start="4">
+<li>气象站的代码实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeatherStation</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WeatherData weatherData = <span class="keyword">new</span> WeatherData();</span><br><span class="line">        WeatherCurrentDisplay indexDisplay = <span class="keyword">new</span> WeatherCurrentDisplay(weatherData);</span><br><span class="line"></span><br><span class="line">        weatherData.setMeasurements(<span class="number">30</span>,<span class="number">50</span>, <span class="number">1800</span>);</span><br><span class="line">        weatherData.setMeasurements(<span class="number">35</span>,<span class="number">80</span>, <span class="number">2800</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>结果显示</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">weather temperature:<span class="number">30.0</span>, humidity:<span class="number">50.0</span>, pressure:<span class="number">1800.0</span></span><br><span class="line">weather temperature:<span class="number">35.0</span>, humidity:<span class="number">80.0</span>, pressure:<span class="number">2800.0</span></span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>关于“观察者模式”的两种模式：</li>
+</ul>
+<p>观察者模式在具体实现时，根据系统设计时的不同需求，一般有两个不同的版本：<strong>推和拉</strong>。<br><strong>推模式</strong>——就是当主题发生改变时，主题主动将变化的信息推送给观察者。比如说气象站只需要温度，湿度和气压三个指标，那么主题只将这三个观察者关注的指标推送出去。<br><strong>拉模式</strong>——当主题发生变化，仅仅只告诉观察者“主题发生变化”，若观察者想要知道具体的改变信息，需要主动从主题中“拉”出来。<strong>拉模式一般会把主题对象作为update()方法的入参</strong>，从而传递给观察者。当观察者需要获取具体变化信息时，可以通过主题对象的引用来获取。很明显，上面赵四实现的代码就使用了<strong>拉模式</strong>。</p>
+<p>那么推和拉模式有什么区别呢？</p>
+<p><strong>推模式将改变信息作为update方法的入参</strong>，所以如果我们要增加给观察者的信息时，要么提供新的update方法或者重新实现观察者，这样的情况是不易于扩展的；而<strong>拉模型将主题对象自身传递给观察者</strong>，让观察者自己去按需要取得信息，这样就不存在上述的问题。</p>
+<p>当我们明确知道需要通知的信息时，我们可以使用推模式。而当我们不清楚观察者具体需要的信息时，可以使用拉模式。</p>
+<ul>
+<li><p>使用Java自带的观察者模式有以下几个问题：</p>
 <ol>
-<li>评论功能  </li>
-<li>分享</li>
-<li>代码高亮等格式优化  </li>
-<li>更美观更优雅</li>
-<li>之后csdn的博客都要迁移过来，工程量巨大，想打人  </li>
+<li>因为遍历观察者的方法不做同步，所以在同步方法后新加入的观察者，将会错过此次正在进行的通知。  </li>
+<li>同理，最近被删除的观察者也会被错误地通知。而此时，这个观察者已经不关注这个主题了。  </li>
+<li>不能依赖观察者被通知的次序。可以从源码中看到主题通知观察者的顺序是按照list倒序的，所以当代码以来通知顺序的时候，使用就需要很小心了。当然可以通过自己写主题及观察者的代码避免这种情况，也不复杂。  </li>
+<li>另外，我们必须继承Observable类，才能用到setChanged()方法。其实这种设计也违反了“多用组合，少用继承”这个设计原则。</li>
 </ol>
-<p><strong><em>那么继续加油吧!</em></strong></p>
-<h4 id="送上一张美照，改天（月？年？）继续出去旅行"><a href="#送上一张美照，改天（月？年？）继续出去旅行" class="headerlink" title="送上一张美照，改天（月？年？）继续出去旅行"></a><a name="fenced-code-block">送上一张美照，改天（月？年？）继续出去旅行</a></h4><p><img src="http://pd4rycnmc.bkt.clouddn.com/12.jpg" alt="image"> </p>
+</li>
+</ul>
 
       
     </div>
@@ -425,9 +465,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/随便写写/" rel="tag"><i class="fa fa-tag"></i> 随便写写</a>
+            <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
           
-            <a href="/tags/吐槽/" rel="tag"><i class="fa fa-tag"></i> 吐槽</a>
+            <a href="/tags/观察者模式/" rel="tag"><i class="fa fa-tag"></i> 观察者模式</a>
           
         </div>
       
@@ -440,8 +480,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" rel="next" title="mysql索引及查询优化（一）——从慢查询实例中开始分析">
-                <i class="fa fa-chevron-left"></i> mysql索引及查询优化（一）——从慢查询实例中开始分析
+              <a href="/2018/11/19/strategyDesignPattern/" rel="next" title="设计模式（一）——策略模式">
+                <i class="fa fa-chevron-left"></i> 设计模式（一）——策略模式
               </a>
             
           </div>
@@ -449,10 +489,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/30/sqlIndexAndQueryOptimize-2/" rel="prev" title="mysql索引及查询优化（二）——索引概述">
-                mysql索引及查询优化（二）——索引概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -600,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#终于有了自己的博客"><span class="nav-number">1.</span> <span class="nav-text">终于有了自己的博客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#送上一张美照，改天（月？年？）继续出去旅行"><span class="nav-number">1.0.1.</span> <span class="nav-text">送上一张美照，改天（月？年？）继续出去旅行</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案设计"><span class="nav-number">2.</span> <span class="nav-text">方案设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计方案"><span class="nav-number">3.</span> <span class="nav-text">设计方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
