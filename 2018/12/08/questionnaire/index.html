@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Lambda,Stream,集合,Java8," />
+  <meta name="keywords" content="问卷," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
-<meta name="keywords" content="Lambda,Stream,集合,Java8">
+<meta name="description" content="Dear friends, I’m a  postgraduate student of Renmin University of China, majoring in Teaching Chinese as a Second language, I’m doing a research about learner’s Chinese level, and need your help, plea">
+<meta name="keywords" content="问卷">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lambda+Stream对集合进行操作">
-<meta property="og:url" content="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/index.html">
+<meta property="og:title" content="Self-assessment Checklist of HSK">
+<meta property="og:url" content="http://yoursite.com/2018/12/08/questionnaire/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
+<meta property="og:description" content="Dear friends, I’m a  postgraduate student of Renmin University of China, majoring in Teaching Chinese as a Second language, I’m doing a research about learner’s Chinese level, and need your help, plea">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T05:11:08.000Z">
+<meta property="og:updated_time" content="2018-12-08T03:33:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lambda+Stream对集合进行操作">
-<meta name="twitter:description" content="写在前面Lambda表达式以及stream API是Java8才支持的两个功能。Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中），Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把真正的函数式编程风格引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，Lambda+Stream的">
+<meta name="twitter:title" content="Self-assessment Checklist of HSK">
+<meta name="twitter:description" content="Dear friends, I’m a  postgraduate student of Renmin University of China, majoring in Teaching Chinese as a Second language, I’m doing a research about learner’s Chinese level, and need your help, plea">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/08/questionnaire/"/>
 
 
 
 
 
-  <title>Lambda+Stream对集合进行操作 | Olive's Blog</title>
+  <title>Self-assessment Checklist of HSK | Olive's Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/11/LambdaAndStreamOperate/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/08/questionnaire/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Lambda+Stream对集合进行操作</h1>
+          <h1 class="post-title" itemprop="name headline">Self-assessment Checklist of HSK</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-11T10:24:00+08:00">
-                2018-11-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-08T10:24:00+08:00">
+                2018-12-08
               </time>
             
 
@@ -324,7 +324,7 @@
 
           
           
-             <span id="/2018/11/11/LambdaAndStreamOperate/" class="leancloud_visitors" data-flag-title="Lambda+Stream对集合进行操作">
+             <span id="/2018/12/08/questionnaire/" class="leancloud_visitors" data-flag-title="Self-assessment Checklist of HSK">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -355,43 +355,13 @@
       
 
       
-        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Lambda表达式以及stream API是Java8才支持的两个功能。<strong>Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中）</strong>，Lambda 表达式填补了Java对于函数式编程的空白；Stream API（java.util.stream）则把<strong>真正的函数式编程风格</strong>引入到Java中。两者结合可以带来很多奇妙的code体验！对很多初学者（比如我）来说，<strong>Lambda+Stream</strong>的方式一方面确实简化了代码的书写，让代码结构变得比较优雅，但从另一方面来说这样的代码风格，着实不容易看懂。但是随着实际的学习使用，我愈发感觉到这两者结合为开发带来了n多效率与快感！接下来就来探索下这种奇妙的编程style吧！</p>
-<p>P.S. 此文不讲述最基本的lambda以及stream的概念和用法，只粗略的介绍下这种code方式在实际项目开发中的应用</p>
-<a id="more"></a>
-<p>假如有一个姓名的list和一个数字的list：：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;String&gt; nameList = Arrays.asList(<span class="string">"Pony"</span>, <span class="string">"Jack"</span>, <span class="string">"Gay"</span>, <span class="string">"Porsche"</span>, <span class="string">"Aston"</span>, <span class="string">"Maybach”);</span></span><br><span class="line"><span class="string">private static List&lt;Integer&gt; numberList = Arrays.asList(1, 2, 3, 4, 5, 6);</span></span><br></pre></td></tr></table></figure>
-<p>###1. 集合遍历<br>如果要遍历nameList，传统的使用是通过for循环来实现的，如果利用lambda表达式，可以让遍历的代码变得更简洁明了：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 常规方式遍历</span></span><br><span class="line">System.out.println(<span class="string">"************ 以下为常规方式遍历list ************"</span>);</span><br><span class="line"><span class="keyword">for</span> (String name : nameList) &#123;</span><br><span class="line">    System.out.println(<span class="string">"name:"</span> + name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+函数操作 遍历list ************"</span>);</span><br><span class="line"><span class="comment">// Lambda 函数操作</span></span><br><span class="line">nameList.forEach(name -&gt; System.out.println(<span class="string">"name:"</span> + name));</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+双冒号操作符 遍历list ************"</span>);</span><br><span class="line"><span class="comment">// Lambda 双冒号操作符</span></span><br><span class="line">nameList.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为常规方式遍历list ************</span><br><span class="line">name:Pony</span><br><span class="line">name:Jack</span><br><span class="line">name:Gay</span><br><span class="line">name:Porsche</span><br><span class="line">name:Aston</span><br><span class="line">name:Maybach</span><br><span class="line">************ 以下为Lambda+函数操作 遍历list ************</span><br><span class="line">name:Pony</span><br><span class="line">name:Jack</span><br><span class="line">name:Gay</span><br><span class="line">name:Porsche</span><br><span class="line">name:Aston</span><br><span class="line">name:Maybach</span><br><span class="line">************ 以下为Lambda+双冒号操作符 遍历list ************</span><br><span class="line">Pony</span><br><span class="line">Jack</span><br><span class="line">Gay</span><br><span class="line">Porsche</span><br><span class="line">Aston</span><br><span class="line">Maybach</span><br></pre></td></tr></table></figure></p>
-<p>可以看到运用了lambda表达式的遍历代码变的短小精悍。另外，我们先是用常用的箭头语法（-&gt;）创建 Lambda 表达式，然后还用了 Java 8 全新的双冒号操作符（::）。但是从输出结果上来看，<strong>双冒号操作符尽管简单，但却缺乏灵活及弹性</strong>。</p>
-<p>###2. filter()过滤</p>
-<p>我们使用stream中的filter过滤器来过滤得到以”P”为开头的姓名：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list ************"</span>);</span><br><span class="line">nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).forEach(name -&gt; System.out.println(<span class="string">"start with P: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list ************</span><br><span class="line">start with P: Pony</span><br><span class="line">start with P: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>值得注意的是，stream的filter功能是<strong>“正向”</strong>的过滤，也就是说，是将<strong>符合filter内条件的数据“过滤”出来，而不是“排除”这些数据</strong>。</p>
-<p>###3. collect()方法</p>
-<p>我们可以使用 collect 方法来将我们的结果集放到一个list，字符串， Set中:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list 并输出为新的list ************"</span>);</span><br><span class="line">List&lt;String&gt; filterNameList = nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).collect(Collectors.toList());</span><br><span class="line">filterNameList.forEach(name -&gt; System.out.println(<span class="string">"filterName:"</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list 并输出为新的list ************</span><br><span class="line">filterName:Pony</span><br><span class="line">filterName:Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###4. limit()限制结果集数目</p>
-<p>我们不想要全部的结果集，只需要前面几行怎么办？easy，limit来帮忙！使用limit可以灵活限制结果集数目：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 过滤list 并用limit 限制结果集数目 ************"</span>);</span><br><span class="line">nameList.stream().filter(name -&gt; name.startsWith(<span class="string">"P"</span>)).limit(<span class="number">1</span>).forEach(name -&gt; System.out.println(<span class="string">"start with P: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 过滤list 并用limit 限制结果集数目 ************</span><br><span class="line">start with P: Pony</span><br></pre></td></tr></table></figure></p>
-<p>###5. sorted()排序</p>
-<p>可以看到，现在的nameList是无序的，使用sorted就可以进行简洁又灵活的排序了！我们来对nameList按照姓名的字典序进行排序吧：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 通过名字的字典序对list排序 ************"</span>);</span><br><span class="line">nameList.stream().sorted((name1, name2) -&gt; (name1.compareTo(name2))).forEach(name -&gt; System.out.println(<span class="string">"sorted name: "</span> + name));</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 通过名字的字典序对list排序 ************</span><br><span class="line">sorted name: Aston</span><br><span class="line">sorted name: Gay</span><br><span class="line">sorted name: Jack</span><br><span class="line">sorted name: Maybach</span><br><span class="line">sorted name: Pony</span><br><span class="line">sorted name: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###6. min()和max()得到最小值及最大值</p>
-<p>如果要获取排序后的最小值（序号最小）或最大值（序号最大）呢？使用min和max吧！</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 通过名字的字典序对list排序 后分别取出第一个及最后一个name ************"</span>);</span><br><span class="line">String minName = nameList.stream().min((name1, name2) -&gt; (name1.compareTo(name2))).get();</span><br><span class="line">String maxName = nameList.stream().max((name1, name2) -&gt; (name1.compareTo(name2))).get();</span><br><span class="line">System.out.println(<span class="string">"minName: "</span> + minName + <span class="string">", maxName: "</span> + maxName);</span><br></pre></td></tr></table></figure>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 通过名字的字典序对list排序 后分别取出第一个及最后一个name ************</span><br><span class="line">minName: Aston, maxName: Porsche</span><br></pre></td></tr></table></figure></p>
-<p>###7. map()来完成对stream中值的转换</p>
-<p>对于numberList，我们要如何对其中每一个数进行平方运算呢？我们将 Lambda 表达式 x -&gt; x * x 传给 map() 方法，来对numberList中每一个元素进行操作。然后再打印看看吧：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// map将流中的一个值转换成一个新的值</span></span><br><span class="line">System.out.println(<span class="string">"************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算 ************"</span>);</span><br><span class="line">numberList.stream().map(x -&gt; x * x).forEach(System.out::println);</span><br><span class="line">```Java</span><br><span class="line"></span><br><span class="line">输出结果如下：</span><br></pre></td></tr></table></figure>
-<p><strong><strong><em>**</em></strong></strong> 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算 <strong><strong><em>**</em></strong></strong><br>1<br>4<br>9<br>16<br>25<br>36<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">###8. reduce()生成新的值</span><br><span class="line"></span><br><span class="line">对numberList中所有元素进行平方运算后，如果我们需要得到它们的和呢？我们使用 reduce() 将所有元素求和生成一个新的值：</span><br><span class="line"></span><br><span class="line">```Java</span><br><span class="line">System.out.println(&quot;************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算后 并用reduce生成新的值 ************&quot;);</span><br><span class="line">Integer newSum = numberList.stream().map(x -&gt; x * x).reduce((x, y) -&gt; x + y).get();</span><br><span class="line">System.out.println(&quot;newSum: &quot; + newSum);</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">************ 以下为Lambda+Stream 使用map对numberList中对元素进行平方运算后 并用reduce生成新的值 ************</span><br><span class="line">newSum: <span class="number">91</span></span><br></pre></td></tr></table></figure></p>
-<p>以上只是介绍了Lambda+Stream对集合操作的一些简单的入门实践，希望能对你有帮助，也希望我们能在合适的地方灵活得运用它们～</p>
-<p>就是这样！希望你喜欢～</p>
+        <p>Dear friends, I’m a  postgraduate student of Renmin University of China, majoring in Teaching Chinese as a Second language, I’m doing a research about learner’s Chinese level, and need your help, please choose the questionnaire below which fits your Chinese level, and finish it, this will help me a lot, thank you very much!</p>
+<p><a href="https://www.wjx.top/m/30473877.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 1 </a></p>
+<p><a href="https://www.wjx.top/m/31774483.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 2 </a></p>
+<p><a href="https://www.wjx.top/m/31773613.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 3 </a></p>
+<p><a href="https://www.wjx.top/m/31773507.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 4 </a></p>
+<p><a href="https://www.wjx.top/m/31910122.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 5 </a></p>
+<p><a href="https://www.wjx.top/m/31910080.aspx" target="_blank" rel="noopener">Self-assessment Checklist of HSK level 6 </a></p>
 
       
     </div>
@@ -438,13 +408,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Lambda/" rel="tag"><i class="fa fa-tag"></i> Lambda</a>
-          
-            <a href="/tags/Stream/" rel="tag"><i class="fa fa-tag"></i> Stream</a>
-          
-            <a href="/tags/集合/" rel="tag"><i class="fa fa-tag"></i> 集合</a>
-          
-            <a href="/tags/Java8/" rel="tag"><i class="fa fa-tag"></i> Java8</a>
+            <a href="/tags/问卷/" rel="tag"><i class="fa fa-tag"></i> 问卷</a>
           
         </div>
       
@@ -457,8 +421,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/24/readResourceCSVFile/" rel="next" title="Java从Resource中读取.csv文件并进行处理">
-                <i class="fa fa-chevron-left"></i> Java从Resource中读取.csv文件并进行处理
+              <a href="/2018/12/01/observerDesignPattern/" rel="next" title="设计模式（二）——观察者模式">
+                <i class="fa fa-chevron-left"></i> 设计模式（二）——观察者模式
               </a>
             
           </div>
@@ -466,10 +430,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/19/strategyDesignPattern/" rel="prev" title="设计模式（一）——策略模式">
-                设计模式（一）——策略模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -526,17 +486,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -607,22 +558,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
