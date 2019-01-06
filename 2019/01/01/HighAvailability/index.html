@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Olive&#39;s Blog">
 <meta property="og:description" content="介绍为了提供高可用的服务。很重要的两个策略是——限流、降级。限流就是防止过多的恶意请求流量以及防止流量超出系统能承载的阈值。限流也分几个维度：页面层、接入层、应用层。另外一个重要的策略是设计降级开关，对业务、服务等进行降级。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-04T08:59:16.520Z">
+<meta property="og:updated_time" content="2019-01-06T02:33:59.050Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高可用服务策略——限流及降级">
 <meta name="twitter:description" content="介绍为了提供高可用的服务。很重要的两个策略是——限流、降级。限流就是防止过多的恶意请求流量以及防止流量超出系统能承载的阈值。限流也分几个维度：页面层、接入层、应用层。另外一个重要的策略是设计降级开关，对业务、服务等进行降级。">
@@ -358,12 +358,15 @@
         <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>为了提供高可用的服务。很重要的两个策略是——限流、降级。限流就是防止过多的恶意请求流量以及防止流量超出系统能承载的阈值。限流也分几个维度：页面层、接入层、应用层。另外一个重要的策略是设计降级开关，对业务、服务等进行降级。</p>
  <a id="more"></a>
 <h2 id="Ⅰ-限流"><a href="#Ⅰ-限流" class="headerlink" title="Ⅰ. 限流"></a>Ⅰ. 限流</h2><p>限流是一种通过限制并发以及请求数量来保证系统高可用的一种手段。当达到限流阈值时，可以通过拒绝服务（直接引导到错误页面或出现“购物车开小差了哦”这样的提示），等待（典型的就是秒杀系统），降级（返回兜底数据或对于某些弱依赖不进行展示，如相似商品推荐等）等策略来保证服务可用——至少是部分可用。限流的阈值我们一般是通过压测时服务的性能来决定的，压测能大致得到系统处理的峰值，可以根据峰值来确定系统的限流阈值。<br>常用的限流方法有以下几种：1.原子计数器。通过对一定时间内，访问接口或服务的次数来进行限流。2.令牌桶限流算法。3.漏桶算法限流。<br>对于应用级限流，可以通过线程池等技术来限制使用资源的数目，也可以对某个接口的并发数或总请求数进行限制。</p>
-<h2 id="Ⅱ-降级"><a href="#Ⅱ-降级" class="headerlink" title="Ⅱ. 降级"></a>Ⅱ. 降级</h2><p>以书中的“模拟鸭子游戏”为案例来具体讲述下这个模式</p>
+<h2 id="Ⅱ-降级"><a href="#Ⅱ-降级" class="headerlink" title="Ⅱ. 降级"></a>Ⅱ. 降级</h2><p>降级的作用是保证核心服务可用——为此可以牺牲一些弱依赖服务。比如在查看购物车列表这个服务中，购物车列表的显示是最核心的，而另外如促销显示、相似推荐等服务并不是核心的，如果遇到购物车列表访问量太高，就可以通过取消调用弱依赖服务的策略来保证核心的购物车列表显示服务可用。<br>配置降级预案之前要对应用进行梳理，根据服务调用链路来看哪些服务属于弱依赖，需要降级。以下简单介绍几种降级的方案：</p>
 <ol>
-<li>首先构建鸭子的“飞行”行为接口</li>
+<li>服务降级：对于服务调用链路中属于弱依赖的服务进行降级。比如购物车列表的相似推荐等。</li>
+<li>读降级：当后端服务出现问题时，可以通过读缓存的方式来降级。如商品详情页的库存。</li>
+<li>写降级：为了避免频繁对db进行写入。比如秒杀时，可以先只对缓存进行更新，而后用异步队列扣减db的库存，保证最终一致性。</li>
+<li>风控降级：在大促时，对一些高风险的用户——比如说访问流量非常多，同一ip地址登入等行为进行降级。使这部分用户不影响应用稳定性。</li>
+<li>页面降级：比如某些页面调用的一些服务异常，可以将这些页面或者部分页面进行降级。</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FlyBehavior</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="III-总结"><a href="#III-总结" class="headerlink" title="III. 总结"></a>III. 总结</h2><p>设计原则：将应用中变化的部分与固定的部分分离，并把“变化”进行封装，从而不影响应用其他的部分。这样就让系统的耦合降低，系统将更有弹性。</p>
+<p>降级一般分为自动降级及人工降级。<br>自动降级可以考虑通过考虑以下几种指标来配置：1. 服务超时时间及超时重试次数；2. 服务调用失败次数，失败达到阈值则进行熔断，熔断后需要通过异步线程定时探测服务是否恢复，恢复了则取消降级；3. 故障，比如网络故障，socket异常。降级后可以显示兜底数据、缓存数据或默认数据；4. 限流，当服务到达限流阈值时，可以进行降级，如提示购物车开小差了等。<br>人工降级较为灵活，但需要做好应用服务等预警。</p>
 
       
     </div>
@@ -581,7 +584,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅰ-限流"><span class="nav-number">2.</span> <span class="nav-text">Ⅰ. 限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅱ-降级"><span class="nav-number">3.</span> <span class="nav-text">Ⅱ. 降级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#III-总结"><span class="nav-number">4.</span> <span class="nav-text">III. 总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅰ-限流"><span class="nav-number">2.</span> <span class="nav-text">Ⅰ. 限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅱ-降级"><span class="nav-number">3.</span> <span class="nav-text">Ⅱ. 降级</span></a></li></ol></div>
             
 
           </div>
