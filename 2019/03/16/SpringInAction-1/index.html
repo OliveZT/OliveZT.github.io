@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Olive&#39;s Blog">
 <meta property="og:description" content="介绍之前一直想看Spring相关的源码及书籍并且想总结下相关的知识点，大约在18年11月份的时候看了《Spring源码深度解析》，当时看的情况实在一般，也没好意思写总结。这次又看了一本书《Spring实战》（Spring in action），觉得可以稍微总结下Spring中常让人疑惑的、或者说最被人关注的一些问题～">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-25T08:53:09.845Z">
+<meta property="og:updated_time" content="2019-05-05T12:13:41.249Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring框架常用知识解析">
 <meta name="twitter:description" content="介绍之前一直想看Spring相关的源码及书籍并且想总结下相关的知识点，大约在18年11月份的时候看了《Spring源码深度解析》，当时看的情况实在一般，也没好意思写总结。这次又看了一本书《Spring实战》（Spring in action），觉得可以稍微总结下Spring中常让人疑惑的、或者说最被人关注的一些问题～">
@@ -449,7 +449,8 @@
 <p>2.填充属性：将值和bean的引用注入到bean对应的属性中； </p>
 <p>3.调用BeanNameAware的setBeanName()方法：如果bean实现了BeanNameAware接口，Spring将bean的ID传递给setBeanName()方法；</p>
 <p>4.调用BeanFactoryAware的setBeanFactory()方法：如果bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入；</p>
-<p>5.调用ApplicationContextAware的setApplicationContext()方法：如果bean实现了ApplicationContextAware接口，将调用setApplicationContext()方法把bean所在的应用上下文的引用传入进来。</p>
+<p>5.调用ApplicationContextAware的setApplicationContext()方法：如果bean实现了ApplicationContextAware接口，将调用setApplicationContext()方法把bean所在的应用上下文的引用传入进来。 </p>
+<p>步骤3、4、5可以表述为“激活Aware方法”</p>
 <p>6.调用BeanPostProcessor的预初始化方法：如果bean实现了BeanPostProcessor接口，将调用ProcessBeforeInitialization()方法</p>
 <p>7.调用InitializingBean的afterPropertiesSet()方法：如果bean实现了InitializingBean接口，将调用afterPropertiesSet()方法。类似地，若bean使用init-method声明来初始化方法，此方法也会被调用 </p>
 <p>8.调用BeanPostProcessor的初始化后方法：如果bean实现了BeanPostProcessor接口，将调用postAfterInitialization()方法</p>
@@ -630,7 +631,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -643,7 +644,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
