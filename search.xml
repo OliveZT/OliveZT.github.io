@@ -6,9 +6,30 @@
     <content type="text"><![CDATA[介绍这次做了一个新项目，项目中各个操作接口都需要验证一把权限，那我首先想到的就是通过Spring的Aop去做一层拦截。然而问题来了：在xml中配置了切面后开始测试，我首先跑了一把单测——调用Controller里面的方法，嗯，没有问题，方法被拦截了。然后我本地起了一个tomcat，准备通过访问URL的方式来进行接口调用，然而！失败了！没有被拦截住 1. 配置相关首先，来看下我的配置 applicationContext.xml 部分配置: &lt;context:component-scan base-package="com.xxx.*"/&gt; &lt;aop:aspectj-autoproxy proxy-target-class="true"/&gt; spring-servlet.xml 部分配置: &lt;mvc:annotation-driven /&gt; &lt;context:component-scan base-package="com.xxx.controller"/&gt; 看起来是没啥问题，为了能让CGLIB进行代理，配置了&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;，那究竟是哪出问题了呢？其实还在于&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;这个配置。这个配置是配置在了applicationContext.xml中的，实际应该配置在spring-servlet.xml中。 2. 原因探寻我们知道，Spring和SpringMVC是两个不同的容器，并且SpringMVC是Spring的子容器。子容器可以访问父容器中的内容，但父容器不能访问子容器中的内容。一开始，我将&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;配置在了applicationContext.xml中，也就是在父级Spring容器中，当Spring加载父容器的时候就会去找切入点，但应该被拦截的controller其实是在子容器中的，父容器是无法访问子容器的，因此拦截失败。如果配置在spring-servlet.xml中，那么问题就解决了～]]></content>
       <tags>
         <tag>Spring</tag>
+        <tag>Controller</tag>
         <tag>SpringMVC</tag>
         <tag>Aop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[RequestParam注解和RequestBody的区别]]></title>
+    <url>%2F2019%2F05%2F21%2FcontrollerRequest%2F</url>
+    <content type="text"><![CDATA[介绍配合例子来讲下@RequestParam和@RequestBody的区别 1. @RequestParam首先，@RequestParam 注解可以接受GET和POST请求，请求的参数会自动转换赋值到注解的变量上。 给一个例子 123456789101112131415161718192021222324252627282930313233343536373839404142434445@RequestMapping("login") @ResponseBody public String login(@RequestParam(value="userName") String userName, @RequestParam(value="password") String password)&#123; return "userName:" + userName + " " + "password:" + password; &#125;``` 上述代码会将请求中的userName和password参数的值赋给对应的变量上述代码等价于：```java@RequestMapping("login2") @ResponseBody public String login2(HttpServletRequest request, HttpServletResponse response)&#123; String userName = request.getParameter("userName"); String password = request.getParameter("password"); return "userName:" + userName + " " + "password:" + password; &#125;``` 可以用postman来模拟下get请求：```java127.0.0.1:8080/login?userName=baba&amp;password=erzi``` 结果如下：```javauserName:baba password:erzi``` 用post请求也是一样的，postman的post请求参数如下：```java[&#123;"key":"Content-Type","name":"Content-Type","value":"application/x-www-form-urlencoded","description":"","type":"text"&#125;]：``` 要在请求的Body中使用key-value的方式写入请求参数：```javauserName:babapassword:12345 2. @RequestBody@RequestBody 注解是用来接收json格式的数据，然后将json string转换成controller中对应的数据对象。 @RequestBody 是处理HttpEntity传递过来数据的，在get请求中，因为没有HttpEntity，所以@RequestBody不能用于解析get请求。post请求中，通过HttpEntity传递的参数，我们可以在请求头中声明数据的类型Content-Type为application/json 此例中入参是一个map，我们也可以自定义一个实体对象，这也是完全ok的： 1234567@RequestMapping("userInfo") @ResponseBody public String QcWorkOrderListDisplay(@RequestBody Map&lt;String, String&gt; userMap)&#123; String userName = userMap.get("userName"); String password = userMap.get("password"); return "userName:" + userName + " " + "password:" + password; &#125; 请求如下： 127.0.0.1:8080/userInfo postman的请求头信息如下： [{"key":"Content-Type","name":"Content-Type","value":"application/json","description":"","type":"text"}] 请求Body如下： { "userName":"baba", "password":"erzi" } 结果还是和上面是一致的。]]></content>
+      <tags>
+        <tag>Spring</tag>
+        <tag>RequestParam</tag>
+        <tag>RequestBody</tag>
         <tag>Controller</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Lombok之Data注解的坑]]></title>
+    <url>%2F2019%2F05%2F05%2FLombokAnnotationData%2F</url>
+    <content type="text"><![CDATA[I. 问题在开发中有一次遇到了一个问题——在前后端交互的时候，后端在解析一个类的字段时抛出了一个npe，然而前端确认了确实传了该字段。这个问题就比较奇怪了，最后发现该字段在前后端中的展示是不一致的。并且这个类上应用了Lombok的@Data注解。那么究竟是怎么回事呢？ II. Case还原1. 首先给出一个类：User，使用了@Data注解，注意看到User类中有一个字段名字是“mPn”123456789@Datapublic class User implements Serializable &#123; private static final long serialVersionUID = -8767742709604940714L; private String name; private Integer sex; private String mPn;&#125; 2. 然后写一个controller123456789@RequestMapping("test")@ResponseBodypublic JsonReturn Test()&#123; User user = new User(); user.setName("John"); user.setSex(1); user.setMPn("18888888888"); return new JsonReturn(new Status(BizCodeEnum.SUCCESS.getCode()), user);&#125; 可以看到，mPn的setter方法是setMPn 其中的JsonReturn是我们自己写的返回给前端的结果封装类，没啥特别的： 1234567891011121314151617181920212223242526272829303132333435363738394041424344public class JsonReturn &#123; private Status status; private Object result; public static JsonReturn success(Object result)&#123; return new JsonReturn(new Status(1001) , result); &#125; public static JsonReturn failed(int code , String msg)&#123; return new JsonReturn(new Status(code , msg)); &#125; public static JsonReturn custom(int code , String msg , Object result)&#123; return new JsonReturn(new Status(code , msg) , result); &#125; public JsonReturn(Status status) &#123; this.status = status; &#125; public JsonReturn(Status status, Object result) &#123; this.status = status; this.result = result; &#125; public Status getStatus() &#123; return status; &#125; public void setStatus(Status status) &#123; this.status = status; &#125; public Object getResult() &#123; return result; &#125; public void setResult(Object result) &#123; this.result = result; &#125;&#125; 3. 本地启动一个tomcat，来访问下localhost:8080/test吧：1&#123;"status":&#123;"code":1001,"msg":null&#125;,"result":&#123;"name":"John","sex":1,"mpn":"18888888888”&#125;&#125; 告诉我你看到了什么？！浏览器前端展示出的mPn字段竟然是mpn！！！ 以上就还原了开头所说的问题现场了。 Ⅲ. 分析那么究竟是怎么回事？在java bean规范当中，类似于mPn这样的字段的setter方法应该如下setmPn，而不是Lombok的@Data注解生成的setMPn（问题就是Lombok在生成此类getter setter方法的时候将开头字母大写了，详情可见Lombok源码），这样当Spring将后端数据返回给前端时，就会出现问题。 所以为了避免这样的问题，我一般都手动用IDEA创建getter setter方法，但是会用@ToString注解来省略toString方法～ Ⅳ. Reference[1]. @Data注解时生成的getter,setter方法在有些属性会有问题！！！ #1861）[2]. Names of Getters and Setters generated by Lombok are buggy for attributes like “eMail” or “aValue” etc #757）]]></content>
+      <tags>
+        <tag>Lombok</tag>
+        <tag>Data</tag>
+        <tag>注解</tag>
       </tags>
   </entry>
   <entry>
