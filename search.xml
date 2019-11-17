@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Fork-Join 框架详解（一）]]></title>
+    <url>%2F2019%2F11%2F10%2FforkJoin-1%2F</url>
+    <content type="text"><![CDATA[1. 什么是Fork-Join框架Fork/Join框架是Java 7提供的一个用于并行执行任务的框架，是一个把大任务分割成若干个小任务，最终汇总每个小任务结果后得到大任务结果的框架，主要思路就是递归或者“分而治之”。Fork-Join框架使用工作窃取（work-stealing）算法来进行并行计算。 2. 使用简介要使用Fork-Join框架，首先需要建立一个ForkJoin任务(ForkJoinTask)。Fork-Join框架提供了两个ForkJoinTask的子类供我们建立ForkJoin任务：a.RecursiveAction：用于没有返回结果的任务b.RecursiveTask:用于有返回结果的任务 3. 举个例子斐波那契数列我们都知道，我们在最开始编程的时候肯定使用过“递归”的方式来计算斐波那契数列，那么今天我们也用Fork-Join框架来实现下斐波那契数列的计算。 首先是传统递归的方法： private static int calcFib(int n) { if (n &lt;= 2) { return 1; } else return calcFib(n - 1) + calcFib(n - 2); } 我们试着运算下： public static void main(String[] args) { System.out.println(calcFib(10)); } 答案很显然是55。 那么我们用Fork-Join框架来实现下： 首先建立一个FibonacciTask的类，因为我们需要有返回值的任务，因此FibonacciTask需要继承RecursiveTask类，并覆盖其compute方法。 fork方法的作用就是将任务放到当前线程的工作队列当中去，join则是等待任务的完成。 如果要计算的斐波那契数列大于2，我们就把任务分成n-1和n-2， 等n-1和n-2任务计算完毕后将这两者的结果合并即可 public class FibonacciTask extends RecursiveTask&lt;Long&gt; { private Long num; public FibonacciTask(Long num) { this.num = num; } @Override protected Long compute() { if (num &lt;= 2) { return 1L; } FibonacciTask fibonacciTask1 = new FibonacciTask(num - 1); fibonacciTask1.fork(); FibonacciTask fibonacciTask2 = new FibonacciTask(num - 2); fibonacciTask2.fork(); return fibonacciTask1.join() + fibonacciTask2.join(); } } 我们试着通过Fork-Join框架来计算下。首先我们建立创建一个Fork-Join任务，即FibonacciTask 类。而后创建一个ForkJoinPool，即实现Fork-Join任务的线程池。然后调用invoke方法获取任务结果即可。 public static void main(String[] args) { FibonacciTask fibonacciTask = new FibonacciTask(10L); ForkJoinPool pool = new ForkJoinPool(); Long result = pool.invoke(fibonacciTask); System.out.println("result:" + result); } 4. 总结细心的同学会发现，使用Fork-Join框架实现的斐波那契数列的时间复杂度并不好，如果我们计算下两个方式的执行时间，会发现传统的效率要比Fork-Join框架好多了。很好理解，Fork-Join框架执行的时候，需要不断地拆分任务和合并任务结果，这些操作需要消耗时间的。当任务不复杂或不大时，fork和join操作占据了整个程序的大部分时间。 但是对于复杂的计算密集型的任务，使用Fork-Join框架效率是比较高的。 另外相对于一般的线程池实现，Fork-Join框架的优势体现在对任务的处理上，即工作窃取（work-stealing）算法。在普通线程池中，如果一个线程正在执行的任务由于某些原因无法继续运行，那么该线程进入等待。而Fork-Join框架中，如果某个子任务由于等待另外一个子任务的完成而无法继续运行时，处理该子任务的线程会主动寻找其他尚未运行的子任务来执行。这种方式减少了线程的等待时间，提高了性能。 在下一节我们会讲下Fork-Join框架内部的一些实现～]]></content>
+      <tags>
+        <tag>Fork-Join</tag>
+        <tag>Concurrent</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Fork-Join 框架详解（一）]]></title>
+    <url>%2F2019%2F08%2F17%2FforkJoin-2%2F</url>
+    <content type="text"><![CDATA[介绍 1. 什么是Fork-Join框架Fork/Join框架是Java 7提供的一个用于并行执行任务的框架，是一个把大任务分割成若干个小任务，最终汇总每个小任务结果后得到大任务结果的框架，主要思路就是递归或者“分而治之”。Fork-Join框架使用工作窃取（work-stealing）算法来进行并行计算。 2. 使用及研究要使用Fork-Join框架，首先需要建立一个ForkJoin任务(ForkJoinTask)。Fork-Join框架提供了两个ForkJoinTask的子类供我们建立ForkJoin任务：a.RecursiveAction：用于没有返回结果的任务b.RecursiveTask:用于有返回结果的任务 // ready to write sth public final ForkJoinTask&lt;V&gt; fork() { Thread t; if ((t = Thread.currentThread()) instanceof ForkJoinWorkerThread) ((ForkJoinWorkerThread)t).workQueue.push(this); else ForkJoinPool.common.externalPush(this); return this; } 进入workQueue.push方法 final void push(ForkJoinTask&lt;?&gt; task) { ForkJoinTask&lt;?&gt;[] a; ForkJoinPool p; int b = base, s = top, n; if ((a = array) != null) { // ignore if queue removed int m = a.length - 1; // fenced write for task visibility U.putOrderedObject(a, ((m &amp; s) &lt;&lt; ASHIFT) + ABASE, task); U.putOrderedInt(this, QTOP, s + 1); if ((n = s - b) &lt;= 1) { if ((p = pool) != null) p.signalWork(p.workQueues, this); } else if (n &gt;= m) growArray(); } } 这方法看得我一脸懵逼，什么s、m的，看都看不懂呢。。那么sm究竟是什么，让我们一探究竟！ static final int INITIAL_QUEUE_CAPACITY = 1 &lt;&lt; 13; // 10000000000000 static final int MAXIMUM_QUEUE_CAPACITY = 1 &lt;&lt; 26; ... volatile int base; // index of next slot for poll int top; // index of next slot for push ForkJoinTask&lt;?&gt;[] array; // the elements (initially unallocated) ... WorkQueue(ForkJoinPool pool, ForkJoinWorkerThread owner) { this.pool = pool; this.owner = owner; // Place indices in the center of array (that is not yet allocated) base = top = INITIAL_QUEUE_CAPACITY &gt;&gt;&gt; 1; // 01000000000000 } 可以看到，base就是表示“双端队列中下一个将被取出的元素的索引值”，top表示“下一个将被放入双端队列中的元素的索引值”。 可以看到，base和top在初始化时，被定义为01000000000000;这个位置是双端队列最大长度的中心（MAXIMUM_QUEUE_CAPACITY的中心位置即是INITIAL_QUEUE_CAPACITY） m就是ForkJoinTask任务队列的尾部，那么U、ABASE、ASHIFT和QTOP又是什么玩意儿？ // Unsafe mechanics. Note that some are (and must be) the same as in FJP private static final sun.misc.Unsafe U; private static final int ABASE; private static final int ASHIFT; private static final long QTOP; ... ... ... U = sun.misc.Unsafe.getUnsafe(); Class&lt;?&gt; wk = WorkQueue.class; Class&lt;?&gt; ak = ForkJoinTask[].class; QTOP = U.objectFieldOffset (wk.getDeclaredField("top")); QLOCK = U.objectFieldOffset (wk.getDeclaredField("qlock")); QCURRENTSTEAL = U.objectFieldOffset (wk.getDeclaredField("currentSteal")); ABASE = U.arrayBaseOffset(ak); int scale = U.arrayIndexScale(ak); if ((scale &amp; (scale - 1)) != 0) throw new Error("data type scale not a power of two"); ASHIFT = 31 - Integer.numberOfLeadingZeros(scale); sun.misc.Unsafe U: 因为Java不能直接访问操作系统底层，而是通过本地方法来访问。Unsafe类提供了硬件级别的原子操作。ABASE: arrayBaseOffset方法是一个本地方法，可以获取数组第一个元素的偏移地址。因此ABASE就表示ForkJoinTask数组的第一个元素的偏移地址。ASHIFT: 返回无符号整型i的最高非零位前面的0的个数QTOP:]]></content>
+      <tags>
+        <tag>Fork-Join</tag>
+        <tag>Concurrent</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[SpringMVC Aop对Controller方法拦截失效]]></title>
     <url>%2F2019%2F06%2F15%2FcontrollerAop%2F</url>
     <content type="text"><![CDATA[介绍这次做了一个新项目，项目中各个操作接口都需要验证一把权限，那我首先想到的就是通过Spring的Aop去做一层拦截。然而问题来了：在xml中配置了切面后开始测试，我首先跑了一把单测——调用Controller里面的方法，嗯，没有问题，方法被拦截了。然后我本地起了一个tomcat，准备通过访问URL的方式来进行接口调用，然而！失败了！没有被拦截住 1. 配置相关首先，来看下我的配置 applicationContext.xml 部分配置: &lt;context:component-scan base-package="com.xxx.*"/&gt; &lt;aop:aspectj-autoproxy proxy-target-class="true"/&gt; spring-servlet.xml 部分配置: &lt;mvc:annotation-driven /&gt; &lt;context:component-scan base-package="com.xxx.controller"/&gt; 看起来是没啥问题，为了能让CGLIB进行代理，配置了&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;，那究竟是哪出问题了呢？其实还在于&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;这个配置。这个配置是配置在了applicationContext.xml中的，实际应该配置在spring-servlet.xml中。 2. 原因探寻我们知道，Spring和SpringMVC是两个不同的容器，并且SpringMVC是Spring的子容器。子容器可以访问父容器中的内容，但父容器不能访问子容器中的内容。一开始，我将&lt;aop:aspectj-autoproxy proxy-target-class=”true”/&gt;配置在了applicationContext.xml中，也就是在父级Spring容器中，当Spring加载父容器的时候就会去找切入点，但应该被拦截的controller其实是在子容器中的，父容器是无法访问子容器的，因此拦截失败。如果配置在spring-servlet.xml中，那么问题就解决了～]]></content>
       <tags>
         <tag>Spring</tag>
-        <tag>Controller</tag>
         <tag>SpringMVC</tag>
         <tag>Aop</tag>
+        <tag>Controller</tag>
       </tags>
   </entry>
   <entry>
@@ -17,9 +35,9 @@
     <content type="text"><![CDATA[介绍配合例子来讲下@RequestParam和@RequestBody的区别 1. @RequestParam首先，@RequestParam 注解可以接受GET和POST请求，请求的参数会自动转换赋值到注解的变量上。 给一个例子 123456789101112131415161718192021222324252627282930313233343536373839404142434445@RequestMapping("login") @ResponseBody public String login(@RequestParam(value="userName") String userName, @RequestParam(value="password") String password)&#123; return "userName:" + userName + " " + "password:" + password; &#125;``` 上述代码会将请求中的userName和password参数的值赋给对应的变量上述代码等价于：```java@RequestMapping("login2") @ResponseBody public String login2(HttpServletRequest request, HttpServletResponse response)&#123; String userName = request.getParameter("userName"); String password = request.getParameter("password"); return "userName:" + userName + " " + "password:" + password; &#125;``` 可以用postman来模拟下get请求：```java127.0.0.1:8080/login?userName=baba&amp;password=erzi``` 结果如下：```javauserName:baba password:erzi``` 用post请求也是一样的，postman的post请求参数如下：```java[&#123;"key":"Content-Type","name":"Content-Type","value":"application/x-www-form-urlencoded","description":"","type":"text"&#125;]：``` 要在请求的Body中使用key-value的方式写入请求参数：```javauserName:babapassword:12345 2. @RequestBody@RequestBody 注解是用来接收json格式的数据，然后将json string转换成controller中对应的数据对象。 @RequestBody 是处理HttpEntity传递过来数据的，在get请求中，因为没有HttpEntity，所以@RequestBody不能用于解析get请求。post请求中，通过HttpEntity传递的参数，我们可以在请求头中声明数据的类型Content-Type为application/json 此例中入参是一个map，我们也可以自定义一个实体对象，这也是完全ok的： 1234567@RequestMapping("userInfo") @ResponseBody public String QcWorkOrderListDisplay(@RequestBody Map&lt;String, String&gt; userMap)&#123; String userName = userMap.get("userName"); String password = userMap.get("password"); return "userName:" + userName + " " + "password:" + password; &#125; 请求如下： 127.0.0.1:8080/userInfo postman的请求头信息如下： [{"key":"Content-Type","name":"Content-Type","value":"application/json","description":"","type":"text"}] 请求Body如下： { "userName":"baba", "password":"erzi" } 结果还是和上面是一致的。]]></content>
       <tags>
         <tag>Spring</tag>
+        <tag>Controller</tag>
         <tag>RequestParam</tag>
         <tag>RequestBody</tag>
-        <tag>Controller</tag>
       </tags>
   </entry>
   <entry>
