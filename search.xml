@@ -11,16 +11,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Java Executor框架梳理（一）]]></title>
-    <url>%2F2019%2F12%2F24%2FjavaExecutor%2F</url>
-    <content type="text"><![CDATA[一. 背景一直对Java的并发框架很感兴趣，工作中也经常会用到线程池以及future之类的框架去异步查询一些接口信息。因此，这段日子趁着工作没有那么繁忙，整理了下java.util.concurrent的并发框架。先把框架的骨架理出来，然后我们跟着源码及实例一起探究下juc并发包的魅力～ 二. JUC架构介绍Executor接口ExecutorService接口，继承至Executor AbstractExecutorService抽象服务 实现ExecutorService接口ForkJoinPool 继承至AbstractExecutorServiceThreadPoolExecutor 继承至AbstractExecutorService几种线程池：newFixedThreadPool newCachedThreadPool newSingleThreadExecutor newSingleThreadScheduledExecutor newScheduledThreadPool ScheduledExecutorService 继承至ExecutorService接口ScheduledThreadPoolExecutor 继承至ThreadPoolExecutor 实现了ScheduledExecutorService接口 Future接口ScheduledFuture接口 继承至 Delayed及Future接口RunnableFuture接口 继承至 Runnable（java.lang包）及Future接口 RunnableScheduledFuture接口 继承至 RunnableFuture及ScheduledFuture接口 ScheduledThreadPoolExecutor.ScheduledFutureTask类 继承至 FutureTask类 实现 RunnableScheduledFuture接口 CompletionService接口ExecutorCompletionService接口 实现CompletionService接口ExecutorCompletionService内部维护了 Executor executor 以及 AbstractExecutorService aes 以及 BlockingQueue&lt;Future&gt; completionQueue 三. 待优化点CREATE TABLE `ExportTask` (]]></content>
-      <tags>
-        <tag>Java</tag>
-        <tag>Concurrent</tag>
-        <tag>Executor</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[异步导出框架介绍（一）]]></title>
     <url>%2F2019%2F12%2F20%2FasyExportFrame%2F</url>
     <content type="text"><![CDATA[一. 背景在我们开发中很多项目都有Excel下载导出的需求，如最近在我司很火的盘古-基地项目，启航-uni（选品中心）项目等。现有的Excel导出功能是同步的，即在页面点击“下载”会同步发送http请求至应用后台，由后台进行处理（数据获取及导出为Excel）后向浏览器发送http的response，从而浏览器下载Excel文件。这里存在两个问题，第一是基本所有需要用到Excel导出功能的项目都会自己去实现一套”ExcelExportUtil”，各个应用的实现也基本没啥差别。这就带来了很多重复的代码，加大各应用的维护成本。第二个问题是如果下载的文件过大（特别是当下载的文件中含有图片内容）时，会导致浏览器请求断开，这样就无法获取到下载文件了。因此很多业务方都有异步导出Excel的需求，然而重头开发的成本又太高了。为解决上述的这些问题，所以我在闲暇时刻开发了此异步导出框架～ 二. 系统架构介绍系统设计架构如下图所示。按照系统划分，可以分为四块：1、数据库 2、导出框架 3、客户端实现 4、下载后台。 1、数据库数据库是实现本框架的基础。当使用本框架进行数据导出时，客户端需要实现一个数据导出的功能，即当用户点击页面进行“下载”时，会向db创建一条数据导出的任务数据。 CREATE TABLE `ExportTask` ( `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `userId` bigint(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID', `formName` varchar(200) NOT NULL DEFAULT '' COMMENT '报表名称', `exportType` int(4) unsigned NOT NULL DEFAULT '0' COMMENT '导出业务类型', `status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '任务状态 0:未完成 1:运行中 2:错误 3:已完成', `key` varchar(200) NOT NULL DEFAULT '' COMMENT '文件对应key', `retryNum` int(4) unsigned NOT NULL DEFAULT '0' COMMENT '重试次数', `rule` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '查询规则', `downloadCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '下载次数', `downloadTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '最后一次下载时间', `ip` varchar(200) NOT NULL DEFAULT '' COMMENT '用户下载ip地址', `visible` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '是否可见', `isDeleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否删除 1:已删除; 0:未删除', `created` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '订单创建时间', `updated` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间', PRIMARY KEY (`id`), KEY `idx_userId_exportType_status` (`userId`,`exportType`,`status`), KEY `idx_created` (`created`), KEY `idx_updated` (`updated`) ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8mb4 COMMENT='导出任务表'; 其中有一个很重要的字段——rule，表示查询规则。当业务方需要获取各自业务的下载数据时，一般都是通过接口的方式获取数据的。此时的入参一般来说是一个包含了各种查询字段的对象。 导出任务表的rule字段就是存放着这些对象的json字符串。 2、导出框架逻辑上很简单易懂，首先我们有一个ExportDataService的接口，然后有一个抽象的AbstractExportDataService实现了ExportDataService的接口。另外有一个ExportDataServiceFactory工厂，负责注册和获取具体的导出服务实现。在AbstractExportDataService中，有一个exportDataMethod方法，此方法负责将数据导出到文件系统（即CDN），并会返回文件上传到文件系统后生成的fileKey。获取fileKey后，会向db中更新此条导出任务的fileKey。 3、客户端实现客户端的实现也十分简便容易。首先需要实现创建导出任务的方法，当用户点击页面进行“下载”时，会向db中insert一条数据。而后，客户端需要实现一个自定义的导出定时任务，并向ExportDataServiceFactory中注册对应的导出服务实现，从而从db中获取对应类型的导出任务并获取数据，最后导出Excel。这里都以Excel导出为例，是因为现今的业务方导出的方式都是Excel。但仔细看整个业务架构的同学可以发现，整个业务架构并不是局限于“Excel”，理论上此服务框架可以适用于各种形式的数据导出。 4、下载后台下载后台顾名思义，会将用户想要导出的数据集中的放到一个后台进行管理。解决了现今各应用导出数据杂乱、无法管理的问题。另外对于权限控制，对接了蘑菇街外网的权限控制——用户需要进行蘑菇街登陆后才可进行相关服务的操作如筛选下载文件及文件下载等。 三. 待优化点1、兼容多种数据导出模式，而不局限于Excel（暂时没有这样的业务需求2333） 2、失败重试任务机制开发：现在只有一个正常导出的定时任务，没有对导出失败的情况做兼容。譬如rpc接口超时或者服务不可用的情况。因此之后会考虑开发失败重试的定时任务去解决异常的导出任务。 3、监控打点：对各业务方的调用情况进行监控及打点。主要是为了避免某些异常导出任务会对线上db产生不可预估的影响，从而影响其他正常的业务运行。 在下一节我们会讲下此异步导出框架的伪代码实现～]]></content>
@@ -308,6 +298,11 @@
         <tag>随便写写</tag>
         <tag>吐槽</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2F2018%2F08%2F07%2FjavaExecutor%2F</url>
+    <content type="text"></content>
   </entry>
   <entry>
     <title><![CDATA[mysql索引及查询优化（一）——从慢查询实例中开始分析]]></title>
