@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,Concurrent,Executor," />
+  <meta name="keywords" content="Traveling, Coding" />
 
 
 
@@ -79,20 +79,18 @@
 
 
 
-<meta name="description" content="一. 背景一直对Java的并发框架很感兴趣，工作中也经常会用到线程池以及future之类的框架去异步查询一些接口信息。因此，这段日子趁着工作没有那么繁忙，整理了下java.util.concurrent的并发框架。先把框架的骨架理出来，然后我们跟着源码及实例一起探究下juc并发包的魅力～">
-<meta name="keywords" content="Java,Concurrent,Executor">
+<meta name="description" content="Bad times make a good man.">
+<meta name="keywords" content="traveling, coding, fitness, living">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java Executor框架梳理（一）">
-<meta property="og:url" content="http://yoursite.com/2019/12/24/javaExecutor/index.html">
+<meta property="og:title" content="Olive&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/2018/08/07/javaExecutor/index.html">
 <meta property="og:site_name" content="Olive&#39;s Blog">
-<meta property="og:description" content="一. 背景一直对Java的并发框架很感兴趣，工作中也经常会用到线程池以及future之类的框架去异步查询一些接口信息。因此，这段日子趁着工作没有那么繁忙，整理了下java.util.concurrent的并发框架。先把框架的骨架理出来，然后我们跟着源码及实例一起探究下juc并发包的魅力～">
+<meta property="og:description" content="Bad times make a good man.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://blog-1300959474.cos.ap-shanghai.myqcloud.com/%E5%BC%82%E6%AD%A5%E5%AF%BC%E5%87%BA%E6%A1%86%E6%9E%B6%E6%9E%B6%E6%9E%84.png">
-<meta property="og:updated_time" content="2019-12-29T06:31:59.747Z">
+<meta property="og:updated_time" content="2019-12-29T06:40:22.181Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java Executor框架梳理（一）">
-<meta name="twitter:description" content="一. 背景一直对Java的并发框架很感兴趣，工作中也经常会用到线程池以及future之类的框架去异步查询一些接口信息。因此，这段日子趁着工作没有那么繁忙，整理了下java.util.concurrent的并发框架。先把框架的骨架理出来，然后我们跟着源码及实例一起探究下juc并发包的魅力～">
-<meta name="twitter:image" content="https://blog-1300959474.cos.ap-shanghai.myqcloud.com/%E5%BC%82%E6%AD%A5%E5%AF%BC%E5%87%BA%E6%A1%86%E6%9E%B6%E6%9E%B6%E6%9E%84.png">
+<meta name="twitter:title" content="Olive&#39;s Blog">
+<meta name="twitter:description" content="Bad times make a good man.">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/12/24/javaExecutor/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/07/javaExecutor/"/>
 
 
 
 
 
-  <title>Java Executor框架梳理（一） | Olive's Blog</title>
+  <title> | Olive's Blog</title>
   
 
 
@@ -279,7 +277,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/24/javaExecutor/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/07/javaExecutor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Olive">
@@ -296,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java Executor框架梳理（一）</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -308,8 +306,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-24T10:24:00+08:00">
-                2019-12-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T23:55:57+08:00">
+                2018-08-07
               </time>
             
 
@@ -326,7 +324,7 @@
 
           
           
-             <span id="/2019/12/24/javaExecutor/" class="leancloud_visitors" data-flag-title="Java Executor框架梳理（一）">
+             <span id="/2018/08/07/javaExecutor/" class="leancloud_visitors" data-flag-title="">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -357,19 +355,7 @@
       
 
       
-        <h3 id="一-背景"><a href="#一-背景" class="headerlink" title="一. 背景"></a>一. 背景</h3><p>一直对Java的并发框架很感兴趣，工作中也经常会用到线程池以及future之类的框架去异步查询一些接口信息。因此，这段日子趁着工作没有那么繁忙，整理了下java.util.concurrent的并发框架。先把框架的骨架理出来，然后我们跟着源码及实例一起探究下juc并发包的魅力～</p>
- <a id="more"></a>
-<h3 id="二-JUC架构介绍"><a href="#二-JUC架构介绍" class="headerlink" title="二. JUC架构介绍"></a>二. JUC架构介绍</h3><p>Executor接口<br>ExecutorService接口，继承至Executor</p>
-<p>AbstractExecutorService抽象服务 实现ExecutorService接口<br>ForkJoinPool 继承至AbstractExecutorService<br>ThreadPoolExecutor 继承至AbstractExecutorService<br>几种线程池：newFixedThreadPool newCachedThreadPool newSingleThreadExecutor newSingleThreadScheduledExecutor newScheduledThreadPool </p>
-<p>ScheduledExecutorService 继承至ExecutorService接口<br>ScheduledThreadPoolExecutor 继承至ThreadPoolExecutor 实现了ScheduledExecutorService接口</p>
-<p>Future接口<br>ScheduledFuture接口 继承至 Delayed及Future接口<br>RunnableFuture接口 继承至 Runnable（java.lang包）及Future接口</p>
-<p>RunnableScheduledFuture接口 继承至 RunnableFuture及ScheduledFuture接口</p>
-<p>ScheduledThreadPoolExecutor.ScheduledFutureTask类 继承至 FutureTask类 实现 RunnableScheduledFuture接口</p>
-<p>CompletionService接口<br>ExecutorCompletionService接口 实现CompletionService接口<br>ExecutorCompletionService内部维护了 Executor executor 以及 AbstractExecutorService aes 以及 BlockingQueue&lt;Future<v>&gt; completionQueue</v></p>
-<h3 id="三-待优化点"><a href="#三-待优化点" class="headerlink" title="三. 待优化点"></a>三. 待优化点</h3><pre><code class="java">CREATE TABLE `ExportTask` (
-</code></pre>
-<p><img src="https://blog-1300959474.cos.ap-shanghai.myqcloud.com/%E5%BC%82%E6%AD%A5%E5%AF%BC%E5%87%BA%E6%A1%86%E6%9E%B6%E6%9E%B6%E6%9E%84.png" alt="image"></p>
-
+        
       
     </div>
     
@@ -413,16 +399,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
-          
-            <a href="/tags/Concurrent/" rel="tag"><i class="fa fa-tag"></i> Concurrent</a>
-          
-            <a href="/tags/Executor/" rel="tag"><i class="fa fa-tag"></i> Executor</a>
-          
-        </div>
-      
 
       
       
@@ -432,8 +408,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/20/asyExportFrame/" rel="next" title="异步导出框架介绍（一）">
-                <i class="fa fa-chevron-left"></i> 异步导出框架介绍（一）
+              <a href="/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" rel="next" title="mysql索引及查询优化（一）——从慢查询实例中开始分析">
+                <i class="fa fa-chevron-left"></i> mysql索引及查询优化（一）——从慢查询实例中开始分析
               </a>
             
           </div>
@@ -442,8 +418,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/12/27/asyExportFrame-2/" rel="prev" title="异步导出框架介绍（二）">
-                异步导出框架介绍（二） <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/08/20180808-sayByeToCSDN/" rel="prev" title="正式告别CSDN">
+                正式告别CSDN <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -501,17 +477,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -582,22 +549,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-背景"><span class="nav-number">1.</span> <span class="nav-text">一. 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-JUC架构介绍"><span class="nav-number">2.</span> <span class="nav-text">二. JUC架构介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-待优化点"><span class="nav-number">3.</span> <span class="nav-text">三. 待优化点</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
