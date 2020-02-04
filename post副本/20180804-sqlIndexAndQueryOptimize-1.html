@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/coffee_favicon-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/coffee_favicon-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",,,," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
+<meta name="keywords" content="sql,数据库,索引,优化">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mysql索引及查询优化（一）——从慢查询实例中开始分析">
+<meta property="og:url" content="http://yoursite.com/post副本/20180804-sqlIndexAndQueryOptimize-1.html">
+<meta property="og:site_name" content="Olive&#39;s Blog">
+<meta property="og:description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/2-慢查询sql分析.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/3-count数据.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/4-表结构.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/5-退款最多的用户.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/6-模拟sql.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/7-存储引擎自动优化.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/8-强制走索引.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/9-优化查询.png">
+<meta property="og:image" content="http://pd4rycnmc.bkt.clouddn.com/10-表结构分析.png">
+<meta property="og:updated_time" content="2018-08-18T06:30:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql索引及查询优化（一）——从慢查询实例中开始分析">
+<meta name="twitter:description" content="官方吐槽为什么写这个写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。">
+<meta name="twitter:image" content="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/post副本/20180804-sqlIndexAndQueryOptimize-1.html"/>
+
+
+
+
+
+  <title>mysql索引及查询优化（一）——从慢查询实例中开始分析 | Olive's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Olive's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">hello</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">mysql索引及查询优化（一）——从慢查询实例中开始分析</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h2 id="官方吐槽"><a href="#官方吐槽" class="headerlink" title="官方吐槽"></a>官方吐槽</h2><p><strong>为什么写这个</strong><br>写这个博客也算是阴差阳错。上次做了个需求：退款列表导出（可以翻翻之前的博客，有写）。虽然事情过了那么久，现在我还是想要吐槽下，这个需求是真的有很多坑，但话说回来，做难事才会有所得，踩的坑越多，那成长就越多（请脑补虐主文）。  </p>
+ <a id="more"></a>
+<p><strong>关于这个系列的博客</strong><br>这个博客大概是这么分布的：第一篇就根据实际场景来分析下索引及查询上的优化；第二篇和第三篇（如果我还能写得出来第三篇的话😅）来系统地整理下mysql的索引及查询的优化。 </p>
+<h2 id="————————————-以下为正文-—————————————"><a href="#————————————-以下为正文-—————————————" class="headerlink" title="———————————— 以下为正文 —————————————"></a>———————————— 以下为正文 —————————————</h2><p>问题是这样的，有一次一个客服同学急急忙忙来找我，说导出几条记录都失败了，查看了错误日志显示错误如下：<br><img src="http://pd4rycnmc.bkt.clouddn.com/1-慢查询日志.png" alt="image"> </p>
+<p>好了，不要盯着人家的红色框框看了，重点不是那里。</p>
+<p>重点是出现了慢查询日志，我知道看图肯定看不出来这条sql是啥，于是我贴心的贴了出来：  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>* （这里其实不是这么暴力地拿全列数据，为了方便，就*表示了）</span><br><span class="line"><span class="keyword">from</span> Refund</span><br><span class="line"><span class="keyword">FORCE</span> <span class="keyword">INDEX</span> (idx_sellerUserId_created_status)</span><br><span class="line"><span class="keyword">WHERE</span> sellerUserId = <span class="number">40955202</span> <span class="keyword">AND</span> <span class="keyword">status</span> <span class="keyword">IN</span> (<span class="number">800</span>, <span class="number">900</span>) </span><br><span class="line"><span class="keyword">AND</span> created &gt;= <span class="number">946656000</span> <span class="keyword">AND</span> created &lt; <span class="number">2051193600</span> </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> created <span class="keyword">desc</span> </span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">50</span></span><br></pre></td></tr></table></figure>
+<p>首先来分析下这条sql要做啥，其实就是在Refund（退款表）这个表中查询所有sellerUserId为40955202，并且状态在800及900（800，900等表示退款处于的状态，如退款申请，退款完成等）之间的，并且创建时间大于等于946656000且小于2051193600（这是两个时间戳）的所有记录，并且将所有这些记录根据created（创建时间）进行逆序排序后取开头50条。注意到这个sql有一个<font color="#DC143C"> FORCE INDEX (idx_sellerUserId_created_status)</font>，这个意思是让sql强制走idx_sellerUserId_created_status这个索引，至于为什么有时候需要强行走索引，这个涉及到mysql的查询优化，之后会讲到</p>
+<p>看了上面这条sql，有没有发现什么问题？可能我们会觉得有问题，但是并不能很清晰地说出来。那么，首先来看下mysql的执行计划吧！</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/2-慢查询sql分析.png" alt="image"> </p>
+<p>看出问题来了么？在我看来，这条sql至少存在3条问题！以下一条一条来分析：</p>
+<ol>
+<li><p><font color="#DC143C">cerated的时间查询范围过大</font>，946656000转化为北京时间是2000/1/1 0:0:0，2051193600转化为北京时间是2035/1/1 0:0:0。那么这个时间段段含义是什么呢？在我应用的具体执行中，当用户在导出退款列表时没有选择导出的时间段时，就会给定一个默认的搜索时间段，而恰巧我设置了比较大的起止时间。这个时间段本来是不需要这么大的，这个时间段基本将这个用户所有的退款记录都包含了。我们来看下这个用户究竟有多少条退款记录：<br><img src="http://pd4rycnmc.bkt.clouddn.com/3-count数据.png" alt="image"><br>好家伙，1000多w条记录。。那么有人会说，时间段大也没关系，不是还有其他索引项可以进行约束吗？那么我们来看看第二个问题</p>
+</li>
+<li><p><font color="#DC143C">索引真的用上了么？</font>为了防止mysql优化器出现石志行为，这条sql特意告诉mysql：您啥也不用想！就用这个索引！那么我们来看下这个索引：idx_sellerUserId_created_status。很明显，这是一个多列索引，是一个由sellerUserId、created、status三列组成的一个联合索引。再来看下这条sql的where条件：<font color="#DC143C">WHERE sellerUserId = 40955202 and status IN(800, 900) and created &gt;= 946656000 AND created &lt; 2051193600 order by created</font>。乍一看，好像索引没用上啊？索引的排序是sellerUserId、created、status，而where条件的顺序是sellerUserId、status、created。那索引是不是没用了？当然不是的！mysql如果连这点优化都没有考虑，那和咸鱼有什么区别？？在这里，mysql会将where条件做一个优化，where条件内的顺序是不影响此索引的使用的。那么这个索引真的生效了么？事实是并没有。我们来分析下这个索引，注意看这个条件：created &gt;= 946656000 AND created &lt; 2051193600，很明显这是一个范围查询，<font color="#DC143C">而在多列索引的使用中，如果碰到了范围条件，那么存储引擎是不会使用范围条件右边的列的，也就是说，咱们这条sql，索引到了idx_sellerUserId_created就到头了，不会再使用status做索引。强制走的这个索引，失效了！</font>因此这条查询只用到部分的索引</p>
+</li>
+<li><p><font color="#DC143C">查询真的有必要那么写么？</font>我们可以看到where条件中限制了created字段的查询范围，而在排序时又需要根据created字段进行逆序排序，之后又只取了最终结果的开头50行。尽管我们很理想化地设想mysql只会返回我们需要的数据，比如在这条sql中我们真的很希望mysql可以只扫描50行就搜索我们需要的那50条数据。然而，在真正的查询中我们惊人地发现mysql读取了超过千万条的数据！一部分的原因在于查询过程中使用了不太合适的索引，另一方面在于我们的查询太累赘了，要想我们的查询不那么累赘，首先要搞清楚我们要查询什么。如上就分析过，我们需要的只是该用户创建的、处于某些状态的、最新的50条记录，那么在这种情况下created字段的范围还有什么意义？</p>
+</li>
+</ol>
+<p>那么针对上面几个问题，接下来我们想办法来优化下这条查询吧！以上的截图和问题都来源于线上，因为接下来的操作可能会涉及到表结构，所以接下来使用一个线下的db来进行模拟</p>
+<p>首先看下表的结构<br><img src="http://pd4rycnmc.bkt.clouddn.com/4-表结构.png" alt="image"> </p>
+<p>然后我们来查询下退款数量最多的用户</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/5-退款最多的用户.png" alt="image"></p>
+<p>我们发现id为93106308的用户退款数量最多，大概有5w多行，那么就用他来做模拟吧！</p>
+<p>首先来模拟下最初的sql语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> </span><br><span class="line"><span class="keyword">select</span>* </span><br><span class="line"><span class="keyword">FROM</span> Refund </span><br><span class="line"><span class="keyword">FORCE</span> <span class="keyword">INDEX</span> (idx_sellerUserId_created_status) </span><br><span class="line"><span class="keyword">WHERE</span> sellerUserId=<span class="number">93106308</span> <span class="keyword">and</span> <span class="keyword">status</span> <span class="keyword">IN</span> (<span class="number">700</span>, <span class="number">900</span>, <span class="number">1000</span>) </span><br><span class="line"><span class="keyword">AND</span> created &gt;= <span class="number">1278691200</span> <span class="keyword">AND</span> created &lt; <span class="number">1531152000</span> </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> created <span class="keyword">desc</span> </span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/6-模拟sql.png" alt="image"></p>
+<p>如上图所示的执行结果，我们可以看到，<font color="#DC143C">mysql确实使用了idx_sellerUserId_created_status这个索引（这其实是废话，你都强制人家走了，，），然后看rows这一行：64867！存储引擎扫描来6w多行才得到我们需要的数据！</font>可以看到在Extra这一列中显示的是：Using index condition，这表示查询部分使用了索引，对于不在索引中的列需要回表查询数据，这也如我们预想的那样</p>
+<p>那么我们来试试存储引擎的自动优化吧：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/7-存储引擎自动优化.png" alt="image"></p>
+<p>哈哈，存储引擎的查询优化其实并没有想象中的那么好（但也没那么差），<font color="#DC143C">去除了强制索引后存储引擎自己找到了一个它认为的最优的索引：idx_created，可以看到Extra这一列中显示的是：Using where，这表示查询需要回表捞数据以后再使用where条件来进行过滤。那么和上面的情况做对比，在性能上其实是毫无差别。</font></p>
+<p>那我们在索引上来优化下吧，为了避免遇到范围查询而使右边索引列失效，<font color="#DC143C">我们来将idx_sellerUserId_created_status索引修改为idx_sellerUserId_status_created，并且让存储引擎强制走这个索引：</font></p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/8-强制走索引.png" alt="image"></p>
+<font color="#DC143C">发现变化了么？查询扫描的行数少了很多！</font>
+
+<p>那接下来再优化下查询语句：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/9-优化查询.png" alt="image"></p>
+<font color="#DC143C">可以看到，因为优化了查询语句，根据created进行逆序排序，导致最后扫描的行数大为减少！</font>
+
+<p>在这里，这条查询的优化并不是在任何场景下都是能保证有很高的查询性能的。我们知道索引在db中维护了一个b+tree 结构（innodb引擎默认结构）。idx_created索引将所有的数据根据created来建立了一个b+tree，当我们要查询的用户数据恰好在b+tree的后方的时候，查询也是需要扫描不少行的：</p>
+<p><img src="http://pd4rycnmc.bkt.clouddn.com/10-表结构分析.png" alt="image"></p>
+<p>所以不同的数据库的数据结构需要具体的分析，如果没有对表结构以及数据结构有较清晰的认识，我认为这种查询优化是不太行的，有时候甚至会起到反面效果。</p>
+<p>所以综合考虑，我还是建议修改下索引结构即可，至于为什么不是直接增加一个索引，这是为了减小存储引擎的压力，过多的冗余索引也给维护带来负担</p>
+<p>接下来的博客会系统地讲述下mysql的索引及查询优化</p>
+<p>对上述问题有问题或者想一起讨论的朋友可以随时联系～</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg"
+                alt="Olive" />
+            
+              <p class="site-author-name" itemprop="name">Olive</p>
+              <p class="site-description motion-element" itemprop="description">Bad times make a good man.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/OliveZT" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:olive_zt@g163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方吐槽"><span class="nav-number">1.</span> <span class="nav-text">官方吐槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#————————————-以下为正文-—————————————"><span class="nav-number">2.</span> <span class="nav-text">———————————— 以下为正文 —————————————</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Olive</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<span id="busuanzi_container_site_pv">
+    Total visited <span id="busuanzi_value_site_pv"></span> times
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+  <!-- custom analytics part create by olive -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+  
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

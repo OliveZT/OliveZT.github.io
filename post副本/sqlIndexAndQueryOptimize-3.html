@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/coffee_favicon-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/coffee_favicon-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",,,," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="写在前面终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。">
+<meta name="keywords" content="sql,数据库,索引,优化">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mysql索引及查询优化（三）——索引设计概述">
+<meta property="og:url" content="http://yoursite.com/post副本/sqlIndexAndQueryOptimize-3.html">
+<meta property="og:site_name" content="Olive&#39;s Blog">
+<meta property="og:description" content="写在前面终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-04T10:41:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql索引及查询优化（三）——索引设计概述">
+<meta name="twitter:description" content="写在前面终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/post副本/sqlIndexAndQueryOptimize-3.html"/>
+
+
+
+
+
+  <title>mysql索引及查询优化（三）——索引设计概述 | Olive's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Olive's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">hello</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">mysql索引及查询优化（三）——索引设计概述</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>终于写到这个系列最后一篇文章了，前两篇第一篇通过慢查询日志分析了sql语句，第二篇讲述了索引等概念、类型，并且讲述了如何通过explain指令来对sql进行分析，最后也给出了一些查询实例。<br>今天第三篇，主要会讲下mysql中索引的普适性设计方案（比如三星索引等概念及设计思路）以及评判索引性能的两种方法。</p>
+ <a id="more"></a>
+<h2 id="Ⅰ-基本概念与假设"><a href="#Ⅰ-基本概念与假设" class="headerlink" title="Ⅰ. 基本概念与假设"></a>Ⅰ. 基本概念与假设</h2><p><strong>1. 对db表的读取：</strong><br>  从磁盘中进行一次随机I/O，即将一个页从磁盘中读取至数据库缓冲池：<strong>大约10ms</strong><br>  从磁盘服务器的缓存中进行读取，当dbms需要的页不在数据库缓冲池中，会向磁盘服务器发起请求，服务器首先回去查询此页是否在缓冲区中，若在缓冲区中，读取的时间将大幅降低：<strong>1ms</strong><br>  对磁盘进行顺序读取，上面说的都是将一个表页读取到缓冲池的情况，很多时候我们会需要读取多个页到缓冲池中，然后进行顺序处理，同时读取多个页将减少每个页被平均读取的时间：<strong>0.1ms</strong></p>
+<p><strong>2. 访问</strong><br>dbms读取一个索引行或一个表行称为一次访问：索引访问或表访问。若dbms扫描索引或表的一个片段（被读取的行在物理上相邻），那么第一次读取为<strong>随机访问（TR）</strong>，后续行的读取为<strong>顺序访问（TS）</strong>。</p>
+<p><strong>3. 谓词</strong><br>where语句中的条件被称为 谓词</p>
+<p><strong>4. 索引片及匹配列</strong><br>索引片是sql查询在执行过程中扫描的一个索引片段，在这个范围中的索引将被顺序扫描；索引片的厚度指 谓词表达式确定的范围，索引片越窄说明匹配到的数据行数越少，那么索引访问及对表的读取的开销越小。另一种广泛描述索引片的方法是定义 索引匹配列的数量。</p>
+<p><strong>5. 索引匹配列和过滤列</strong><br>有些列可能同时存在于where子句中与索引中，但是这个列所在的索引却不能生效（比如之前所说的，where子句中碰到范围查询，其后的索引列将不生效），这样的列称为过滤列，因为通过索引上的过滤列能够避免回表访问。与过滤列相对的，如果where条件中的一列同时在索引中，并且能参与索引的定义，那么这列就是匹配列。</p>
+<p><strong>6. 过滤因子</strong><br>其描述了谓词的选择性，即满足where条件的记录占所有记录总数的比例。在评价索引是否合适时，过滤因子很重要。并且在实际中，一般考虑最差情况下的过滤因子，而不是平均过滤因子。</p>
+<h2 id="Ⅱ-最优索引概念及设计思路"><a href="#Ⅱ-最优索引概念及设计思路" class="headerlink" title="Ⅱ. 最优索引概念及设计思路"></a>Ⅱ. 最优索引概念及设计思路</h2><p><strong>1. 三星索引</strong><br>三星索引是一个概念，表示对于一个查询来说最理想的索引。<br>既然是三星索引，那必然是有三颗星，那么星级如何确定呢？<br>如果与一个查询相关的索引行是相邻的，或者至少足够靠近的话，那这个索引就可以被标记上第一颗星。这最小化了必须扫描的索引片的宽度； 如果索引行的顺序与查询语句的需求一致，则索引可以被标记上第二颗星。这排除了排序操作； 如果索引行包含查询语句中的所有列——那么索引就可以被标记上第三颗星。这避免了访问表的操作，仅访问索引就可以了。 对于这三颗星，第三颗通常是最重要的（其实这里的说明很理论也很拗口，下面会给出具体例子来说明）。</p>
+<p><strong>2. 宽索引与窄索引</strong><br>宽索引是指一个至少满足第三颗星的索引，此索引包含了select语句所涉及的所有列，因此该查询只需访问索引而不必回表查询。</p>
+<p><strong>3. 举个三星索引设计的栗子：</strong><br>比如说如下的一条sql：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span>=“jack” <span class="keyword">and</span> city=“hangzhou” <span class="keyword">order</span> <span class="keyword">by</span> age</span><br></pre></td></tr></table></figure>
+<p><strong>第一颗星：</strong>取出所有等值谓词的列（即where条件后的列：name和city），将name和city作为索引的开头，并且不要求严格的顺序。这可以使索引片宽度缩短至最窄</p>
+<p><strong>第二颗星：</strong>将用来排序的列（oder by age）加入到索引中。那现在索引就变成：name_city_age</p>
+<p><strong>第三颗星：</strong>将查询语句剩余的列加到索引中去，列在索引中的顺序对查询性能无影响。此时索引将变成name_city_age_sex，这个索引就是三星索引</p>
+<p><strong>4. 索引星级的选择</strong><br>能设计出三星索引，无疑是最好的情况（不考虑存储索引等的开销），但在很多实际情况下，是无法设计出理想的三星索引的。换句话说，对于索引的某些星级我们必须要进行舍弃。</p>
+<p>举个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> age <span class="keyword">between</span> a <span class="keyword">and</span> b <span class="keyword">and</span> city=“hangzhou” <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span></span><br></pre></td></tr></table></figure>
+<p>在这个sql中，age是一个范围条件，在前面的博客中（<a href="http://blog4olive.top/2018/08/04/20180804-sqlIndexAndQueryOptimize-1/" target="_blank" rel="noopener">mysql索引及查询优化（一）——从慢查询实例中开始分析</a>）我们说过，如果索引列是一个范围条件，那么其后的索引都将失效。那这个时候索引该如何设计？<br>在前面说过，索引的第三颗星通常是最重要的，那么我们先设计第三颗星，索引将是：*_user。添加name会让索引满足第二颗星，但这是基于name必须在范围谓词age的前面的假设的，那么此时索引将变成:name_age_sex或者city_name_age_sex，那么此时的索引满不满足第一颗星的，答案是不满足的。讲到这里，我们一定能发现，第一颗星和第二颗星是存在互斥的，如果要满足第一颗星，那么索引将是city_age_name_sex，然而此时name列索引是不会生效的，此时就无法避免排序，也即无法满足第二颗星。<br>综上所述，在这种情况下，我们是无法设计出理想的三星索引的，我们必须要进行取舍。<br>至于是选第一颗星还是第二颗星，<strong>一个普遍的结论（虽然并不是完全正确的）是第一颗星要比第二颗星重要，因为在硬件发展水平如此快速的今天，可能排序带来的开销远低于因为索引片太厚而带来的查询开销。</strong></p>
+<p>另外，虽然理论上为每一个查询都设计出最优的索引看似是比较好的，然而真正这么做的时候我们需要考虑下开销：首先过多的索引会占用大量的磁盘空间，我们需要评估索引带来的收益是否能抵消磁盘空间带来的开销；其次表上有太多的索引（并且这些索引可能存在冗余），会使db的插入、更新与删除操作变得较慢；最后，较频繁的插入频率，可能会加大磁盘的负载。<br>所以，<strong>理论终究只是理论，具体问题还需要具体分析。</strong></p>
+<h2 id="Ⅲ-如何设计及评估索引性能"><a href="#Ⅲ-如何设计及评估索引性能" class="headerlink" title="Ⅲ. 如何设计及评估索引性能"></a>Ⅲ. 如何设计及评估索引性能</h2><p>首先给出两个快速且有用的方法：<br><strong>1. 基本问题法（Basic Question, BQ）</strong><br><strong>2. 快速上限估算法（Quick Upper-Bound Estimate, QUBE）</strong></p>
+<p><strong>1. 基本问题法</strong><br>BQ是一个很简单很快速的评估方法，对于每一个查询语句，首先都要问这么一个问题：<br>    是否存在一个索引包含了where子句所用到的所有列？<br>如果答案是不存在，那么应该考虑将缺少的列加入到现有的索引中去。此时会产生一个半宽索引，虽然这样索引只能拿到一星，但索引过滤可以保证回表访问只发生在所有查询条件都满足的时候。如果性能还不够，那么可以将查询所有涉及到的列都加到索引上，这会产生一个避免所有表访问的宽索引。如果查询还是很慢，那么就重新设计索引～</p>
+<p><strong>2. 快速上限估算法</strong>。<br>相比于BQ，QUBE是一个比较耗时的方法，但是它的优点也很明显——QUBE可以估算出查询的性能。QUBE通过计算本地响应时间（LRT）来评估查询的性能。我们只使用TR（随机访问的数量）和TS（顺序访问的数量）来进行查询耗时的估算。</p>
+<p>QUBE中假设单次随机访问的时间为10ms，顺序随机访问的时间为0.1ms</p>
+<p><strong>3. QUBE示例：</strong>  </p>
+<p><strong>3.1 主键索引访问：</strong>考虑如下的sql（假设id为主键）：<br>select id, age, city from user where id = xxx<br>通过主键索引读取一个表行需要分别随机访问一次表以及索引，<strong>因此此查询的开销大约是2x10ms=20ms。</strong><br><strong>3.2 聚簇索引访问：</strong>  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, age <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> city = xx <span class="keyword">and</span> post = xxx <span class="keyword">order</span> <span class="keyword">by</span> age</span><br></pre></td></tr></table></figure>
+<p>假如city_post_age是一个聚簇索引，并且杭州市内邮政编码为xxx的用户有1000个，可以通过三星索引法分析这个索引是两星的（第一颗及第二颗），但是是不满足的第三颗星的，它必须回表去访问不在索引列中的列。首先，需要进行一次随机访问找到索引片上第一条符合条件的索引行，这是一次TR，然后需要1000次TS来读取索引，因此读取索引片的开销为1x10ms+1000x0.01ms=20ms；然后来计算回表的开销，回表需要一次TR，以及999次TS，所以回表的开销大约也是20ms。<strong>因此这条sql总的耗时大约是40ms。</strong><br><strong>3.3 非聚簇索引访问：</strong><br>还是如上的sql，如果city_post_age不是一个聚簇索引，那么我们知道，回表的访问将变成1000次的TR，此时回表的耗时将是10s！此时可以考虑将id加入到索引city_post_age中，这样便省去了回表查询的开销。</p>
+<h2 id="Ⅳ-总结"><a href="#Ⅳ-总结" class="headerlink" title="Ⅳ. 总结"></a>Ⅳ. 总结</h2><p>这次我们首先定义了一些假设及概念，然后提出了“三星索引”的概念及设计思路，最后讲述评估索引性能的两个方案。总的来说，我认为这里所提出的索引设计及评估的方案都是简单易用的，有兴趣的不妨试试看。BTW，其实我觉得explain也是一个很好的分析性能的方法，在索引建立完之后，不妨使用explain来分析下查询的性能～</p>
+<h2 id="Ⅴ-Reference"><a href="#Ⅴ-Reference" class="headerlink" title="Ⅴ. Reference"></a>Ⅴ. Reference</h2><p>[1]. Lahdenmaki T, Leach M. Relational Database Index Design and the Optimizers[M]. Wiley-Interscience, 2005.<br>[2]. Schwartz B, Zaitsev P, Tkachenko V. High Performance MySQL: Optimization, Backups, and Replication[M]. O’Reilly Media, Inc. 2012.</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg"
+                alt="Olive" />
+            
+              <p class="site-author-name" itemprop="name">Olive</p>
+              <p class="site-description motion-element" itemprop="description">Bad times make a good man.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/OliveZT" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:olive_zt@g163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅰ-基本概念与假设"><span class="nav-number">2.</span> <span class="nav-text">Ⅰ. 基本概念与假设</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅱ-最优索引概念及设计思路"><span class="nav-number">3.</span> <span class="nav-text">Ⅱ. 最优索引概念及设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅲ-如何设计及评估索引性能"><span class="nav-number">4.</span> <span class="nav-text">Ⅲ. 如何设计及评估索引性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅳ-总结"><span class="nav-number">5.</span> <span class="nav-text">Ⅳ. 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ⅴ-Reference"><span class="nav-number">6.</span> <span class="nav-text">Ⅴ. Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Olive</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<span id="busuanzi_container_site_pv">
+    Total visited <span id="busuanzi_value_site_pv"></span> times
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+  <!-- custom analytics part create by olive -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+  
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

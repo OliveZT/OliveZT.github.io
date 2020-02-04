@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/coffee_favicon-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/coffee_favicon-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",,,,," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一. 背景中间件相关知识～主要有Dubbo、MQ以及Redis">
+<meta name="keywords" content="Java,中间件,Redis,Dubbo,MQ">
+<meta property="og:type" content="website">
+<meta property="og:title" content="中间件相关知识">
+<meta property="og:url" content="http://yoursite.com/post副本/middlewareInterview.html">
+<meta property="og:site_name" content="Olive&#39;s Blog">
+<meta property="og:description" content="一. 背景中间件相关知识～主要有Dubbo、MQ以及Redis">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-02-02T06:45:37.422Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="中间件相关知识">
+<meta name="twitter:description" content="一. 背景中间件相关知识～主要有Dubbo、MQ以及Redis">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/post副本/middlewareInterview.html"/>
+
+
+
+
+
+  <title>中间件相关知识 | Olive's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Olive's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">hello</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">中间件相关知识</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h3 id="一-背景"><a href="#一-背景" class="headerlink" title="一. 背景"></a>一. 背景</h3><p>中间件相关知识～主要有Dubbo、MQ以及Redis</p>
+ <a id="more"></a>
+<h3 id="二-开整！"><a href="#二-开整！" class="headerlink" title="二. 开整！"></a>二. 开整！</h3><h4 id="2-1-Dubbo（Tesla）"><a href="#2-1-Dubbo（Tesla）" class="headerlink" title="2.1. Dubbo（Tesla）"></a>2.1. Dubbo（Tesla）</h4><p>1、rpc服务暴露过程<br>用户实现自定义接口服务，Dubbo会在Spring实例化完bean后，将具体服务转化Invoker；调用export方法，将Invoker转化为Exporter，将服务注册到服务中心。</p>
+<p>2、rpc服务消费过程<br>客户端在本地配置（xml或者注解）了远程服务，通过调用本地方法一样去调用远程方法，rpc框架会创建invoker以及接口的代理，实际的调用是委托给代理rpcproxy。（这里做了多个服务提供者的合并，负载均衡等）</p>
+<p>3、请求-响应过程（有些问题）<br>rpc服务方通过rpcServer去导出（export）远程接口方法，客户端通过rpcClient引入（import）远程接口方法。客户端通过调用本地方法一样去调用远程方法，rpc框架提供接口的代理实现，实际的调用是委托给代理rpcProxy。代理封装调用信息并将调用转交给rpcInvoker去执行。客户端的rpcInvoker通过连接器rpcConnector去维持与服务端的通道（rpcChannel），并用rpcProtocol执行协议编码（encode）并将编码后的请求消息通过通道发送给服务方。  </p>
+<p>rpc服务端接收器rpcAcceptor接收客户端的调用请求，同样使用rpcProtocol执行协议解码（decode）。解码后的调用信息传递给rpcProcessor去控制处理调用过程，最后rpcInvoker委托调用执行并返回调用结果。</p>
+<p>4、Dubbo中的几个角色<br>1）Provider：暴露服务的服务提供方；<br>2）Consumer：调用远程服务的服务消费方；<br>3）Registry：服务注册与发现的注册中心；<br>4）Monitor：服务消费者和提供者在内存中累计调用次数和调用时间，主动定时每分钟发送一次统计数据到监控中心；<br>5）Container：服务运行容器，远程调用、序列化</p>
+<p>4、Dubbo中的负载均衡<br>1）随机，按权重随机选择，也是默认的策略；<br>2）轮询；<br>3）最少活跃调用；<br>4）一致性哈希，相同参数请求总是发到同一个provider</p>
+<p>5、集群容错策略<br>1）Failover Cluster：调用失败后自动切换重新调用其他机器，适合读操作，默认模式；<br>2）Failback Cluster：调用失败后，返回一个空结果给服务提供者，通过定时任务重发，适合执行消息通知；<br>3）Failfast Cluster：一次调用失败后抛出异常，适合保持幂等性的操作，如重复提交订单；<br>4）Failsafe Cluster：调用失败后不抛出异常，只打印异常信息，适用于日志审计；<br>5）Forking Cluster：多线程并发地去调用，如果有一个返回成功了，就会结束其他调用，这个比较适合实时性要求高的读操作；<br>6）Broadcast Cluster：逐个调用所有的provider，常用于通知所有提供者更新缓存或日志等本地资源信息。</p>
+<p>6、什么是分布式事务，怎么实现<br>分布式事务简单来讲就是一个服务调用涉及到多处的资源协调，如果要整个服务做事务，就涉及到了多个分布式服务之间的事务协调。可以通过消息机制异步对账，保证最终的一致性。下单资源同步扣减资源，最终消息报保证一致。</p>
+<h4 id="2-2-MQ-（RabbitMQ）"><a href="#2-2-MQ-（RabbitMQ）" class="headerlink" title="2.2. MQ （RabbitMQ）"></a>2.2. MQ （RabbitMQ）</h4><p>1、为什么使用消息队列<br>异步解耦、削峰填谷</p>
+<p>2、消息队列如何选型<br>RocketMQ和Kafka吞吐量较高，达10万级；<br>RabbitMQ的一大特点，延迟最低，可达微秒级；<br>Kafka适合日志采集。</p>
+<p>3、如何保证消息中间件的高可用<br>RabbitMQ 有三种模式：单机模式、普通集群模式（创建的queue，只会放在一个RabbitMQ实例上）、镜像集群模式（无论元数据还是queue 里的消息都会存在于多个实例上）。</p>
+<p>Kafka 的高可用性：Kafka由多个 broker 组成，每个 broker 是一个节点；你创建一个 topic，这个 topic 可以划分为多个 partition，每个 partition 可以存在于不同的 broker 上，每个 partition 就放一部分数据。这是天然的分布式消息队列，就是说一个 topic 的数据，是分散放在多个机器上的，每个机器就放一部分数据。</p>
+<p>4、如何保证消息不丢失<br>RabbitMQ：分三种情况：生产者弄丢了数据、RabbitMQ弄丢了数据以及消费者弄丢了数据。<br>1）生产者弄丢了数据：开启confirm模式，如果消息成功写入了RabbitMQ中，RabbitMQ会给你回传一个ack消息。否则认为消息没有成功发送，我们可以重发；<br>2）RabbitMQ 弄丢了数据：开启 RabbitMQ 的持久化，将消息持久化到磁盘；<br>3）消费者弄丢了数据：使用RabbitMQ提供的ack机制，关闭自动ack。在客户端处理完消息的时候，在程序里 通过ack告知RabbitMQ才算消费成功。否则</p>
+<p>Kafka：Kafka可以在producer端设置 acks=all，当leader接收到消息，所有的 follower都同步到了消息之后，才认为本次写成功了。如果没满足这个条件，生产者会自动不断的重试；<br>另外一种情况是：Kafka 的 leader 机器宕机了，在将follower切换为 leader 之后，会发现数据丢失。怎么解决这种情况呢？除了上面说的acks=all外，通过设置一些参数，保证每个 partition 必须有至少 2 个副本，要求一个leader至少有至少一个follower还处于存活状态。</p>
+<p>5、如何保证消息不被重复消费<br>消息中间件基本都会有一个偏移量来保证消息消费的进度，如果当consumer已经消费了消息但是还没有将偏移量告知给消息中间件时，消息中间件进程crash了，此时认为consumer并没有消费该消费，重启后就会出现消息重复消费的情况。  </p>
+<p>一般来说，如果要保证消息不丢，就没有办法保证消息不被重复消费。没有办法两全其美。所以在业务上要保证消息的幂等。比如物流发货，物流单号和公司是一个唯一键约束，可以保证幂等；某些对于状态实效性要求不高的系统，如品控，可以通过异步对账保证最终一致性；插入db前根据是否存在此记录来决定是update还是insert。</p>
+<p>5、如何保证消息传输的顺序性<br>Kafka和蘑菇街的Corgi在创建topic都有partition（分区）的概念。为了保证消息传输的顺序性，可以用某个字段作为分区字段比如退款的id，同一个退款id的消息会被放入一个partition中，所以一个partition里的数据是有序的。  </p>
+<p>6、消息积压了怎么办<br>一般对于消息的积压，我们都会有报警，如果consumer积压的消息超过阈值就会告警提醒关注者去处理。一般出现这种情况是因为消息在消费时，出现异常导致一直阻塞消费导致的，此时就需要去人工处理问题，然后让消息正常消费即可。  </p>
+<p>case：物流订阅消息不符合物流的规则校验导致业务异常，消息阻塞。物流在订阅时都会对物流公司编码及单号做一层简单的校验。比如某个物流公司的单号是纯数字12-16位，当时是有个业务入口层没有调用物流的单号校验导致这种异常的情况发生</p>
+<p>7、蘑菇街消息中间件-Corgi架构<br>采用RocketMQ+Kafka的架构：Keeper（有点类似于redis的哨兵，在RocketMQ 中叫做NameServer；Kafka使用ZooKeeper做元数据的存储及Broker的发现）采用主从的架构，提供服务发现和元数据管理的功能；Broker之间采用主从的结构。</p>
+<h4 id="2-3-ZK"><a href="#2-3-ZK" class="headerlink" title="2.3. ZK"></a>2.3. ZK</h4><p>1、zk是什么<br>ZooKeeper是一个经典的分布式数据一致性解决方案，致力于为分布式应用提供一个高性能、高可用，且具有严格顺序访问控制能力的分布式协调服务。zk的数据结构是一个树形结构</p>
+<p>2、zk的使用<br>分布式应用程序可以基于ZooKeeper实现数据发布与订阅、负载均衡、命名服务、分布式协调与通知、集群管理、Leader选举、分布式锁、分布式队列等功能。  </p>
+<p>3、业务使用：<br>rpc注册中心。</p>
+<p>4、zk集群角色<br>ZooKeeper没有沿用传统的Master/Slave模式（主备模式），而是引入了Leader、Follower和Observer三种角色。Observer和Follower唯一的区别是Observer不参与任何形式的投票。</p>
+<h4 id="2-4-Redis"><a href="#2-4-Redis" class="headerlink" title="2.4. Redis"></a>2.4. Redis</h4><p>1、Redis的六种底层数据结构<br>简单动态字符串（SDS）、链表、字典、跳跃表，整数集合和压缩列表</p>
+<p>2、简单动态字符串（SDS）<br>SDS的结构体中维护了一个字节数组buf[]用来保存字符串，len表示现有字符串占用的空间，free表示剩余可用的空间长度。</p>
+<p>相比于string的区别<br>（1）SDS中获取字符串的长度的时间复杂度是O(1)；<br>（2）自动空间预分配，不用人工分配空间，并减少了由于修改字符串长度导致了空间分配次数（小于1MB，分配两倍所需空间，否则长度加1MB）；也不会造成缓冲区溢出<br>（3）SDS不是用空字符串来判定字符串结尾的，因此可以保存二进制数据；<br>（4）SDS也有一定的局限，SDS只能用一部分&lt;string.h&gt;库的函数</p>
+<p>3、链表（list）结构<br>Redis列表（List）底层实现之一就是链表。list结构体内保存着链表节点数目的属性len，那么我们在获取链表长度的时候就不需要一直迭代了，时间复杂度只有O(1)；并且我们可以在O(1)的时间复杂度内获取到链表的头结点或者尾节点。</p>
+<p>4、字典（dictionary）结构<br>Redis的哈希对象的底层就是通过字典来实现的，Redis底层默认使用MurmurHash2算法来计算哈希值；rehash（再散列）的长度计算是计算第一个大于等于size的2次幂的数；</p>
+<p>字典有两个hash表，如果0号哈希表为空，那么将新哈希表设置为0号哈希表，那么此次操作其实就是一次初始化；否则，将新哈希表设置为1号哈希表，这个过程就是一次rehash。</p>
+<p>Redis使用了渐进式的rehash策略——rehash是多次、渐进地完成的：有一个rehashidx字段来控制rehash的进度。</p>
+<p>5、跳跃表（skiplist）<br>对排行榜数据进行排序时，我们会用到Redis中的有序集合对象（sorted set），跳跃表就是有序集合的底层实现之一。跳跃表的查找速度平均为O(logN)，最差为O(N)。</p>
+<p>用跳跃表访问表头及表尾节点的你复杂度均为O(1)，也可以在O(1)时间内得到表中节点的数目。</p>
+<p>跳跃表默认会以分值的大小递增排序，分值相同则根据成员对象的字典序进行排序。</p>
+<p>6、整数集合（intset）<br>整数集合是Redis中集合的底层实现之一。</p>
+<p>在将元素（整数）加入集合时，不需要考虑类型，因为整数集合中做了升级（upgrade）逻辑：当加入元素到整数集合时，如果新元素的类型比现有的类型要大时，整数集合会进行升级。升级逻辑提高了灵活性以及比较好的节约了内存。</p>
+<p>集合中查找元素是通过二分法实现的。</p>
+<p>7、压缩列表（ziplist）<br>压缩列表是一种为了节约内存而开发的顺序数据结构，是列表及哈希对象的底层实现之一。</p>
+<p>8、Redis 的数据对象<br>Redis有五种数据对象：string（字符串），list（列表），hash（哈希），set（集合）及 zsetsorted set（有序集合)。这些对象就是依赖底层数据结构构造的。</p>
+<p>9、一个字符串类型的值能存储最大容量是多少。<br>512M</p>
+<p>10、Redis 的持久化机制是什么？各自的优缺点<br>Redis提供两种持久化机制 RDB 和 AOF 机制  </p>
+<p>（1）RDB是指用数据集快照的方式半持久化记录 redis 数据库的所有键值对，在某个时间点将数据写入一个临时文件，持久化结束后，用这个临时文件替换上次持久化的文件，达到数据恢复。<br>（2）AOF（Append-only file）持久化方式，是指所有的命令行记录以 redis 命令格式完全持久化存储保存为 aof 文件。</p>
+<p>两者区别：<br>（1）RDB模式数据安全性低。RDB 是间隔一段时间进行持久化，如果持久化时 redis 发生故障，会发生数据丢失；<br>（2）AOF 文件比 RDB 文件大，且恢复速度慢；<br>（3）数据集大的时候，AOF 比 RDB 启动效率低</p>
+<p>11、RDB备份操作。<br>BGSAVE命令下Redis会创建一个子进程来进行RDB文件的创建，而父进程继续处理命令请求，这样就不会导致在RDB文件创建的过程中阻塞其他的命令请求。而SAVE命令是会阻塞命令请求直至完成SAVE命令。因此Redis一般情况下都是执行BGSAVE命令。当Redis服务器在启动时，会加载redis.conf文件，其中保存着RDB文件备份的条件，比如：save 900 1。指的是如果在900s内至少对数据库进行了一次修改则执行BGSAVE命令</p>
+<p>12、aof同步策略<br>1）no：会将aof_buf缓冲区中的所有内容写到AOF文件，但并不同步AOF文件；<br>2）everysec：每秒同步；<br>3）always：每一步做同步。</p>
+<p>13、AOF的重写。<br>Redis提供了AOF的重写（rewrite）功能。通过重写，可以创建一个新AOF文件来代替现有的AOF文件，新的AOF文件中国的操作是通过直接读取服务器当前的数据库状态来实现的，所以没有其他浪费空间的冗余命令。AOF重写功能是这样实现的：从现有数据库中读取键现在的值，然后用一条命令去记录键值对，而后代替之前记录这个键值对的多条命令。</p>
+<p>AOF后台重写：<br>在子进程执行AOF重写的期间，服务器还会接收新的请求命令，这些命令可能会对现有数据库状态进行修改，从而让服务器当前状态与重写后的AOF文件保存的状态不一致。为了解决上述这个问题，Redis服务器设置了一个AOF重写缓冲区，此缓冲区在子进程进行重写后使用，当Redis接收一个命令时，会将这个命令发送到AOF重写缓冲区，当重写完成后，只需要让子进程将AOF重写缓冲区中的数据写入新的AOF文件中即可。</p>
+<p>14、Redis主从复制<br>Redis的复制功能分为同步（sync）和命令传播（command propagate）两个步骤</p>
+<p>15、Redis的同步机制<br>Redis可以使用PSYNC指令进行同步，有两种同步方式：完整重同步（full resync）和部分重同步（partial resync）：<br>1） 完整重同步一般用在第一次复制的时候，通过让主服务器创建并发送RDB文件给从服务器，并向从服务器发送缓冲区内的写命令来实现；<br>2） 部分重同步一般用于断线重连的复制，当从服务器断线后又重新上线，如果满足一定条件主服务器可以将断线这段时间的写命令发送给从服务器，从而使主从数据库状态保持一致。</p>
+<p>15、部分重同步实现<br>主服务器与从服务器都会维护一个重同步的偏移量（psync_offset）：主服务器想从服务器传播N字节数据，就会将自己的偏移量加N；同理从服务器收到N字节数据就将自己的偏移量加N，从而我们可以根据偏移量来确定从服务器和主服务器的数据库状态是否一致。</p>
+<p>16、主服务如何决定使用完整重同步还是部分重同步<br>主服务器维护了一个长度固定的队列，默认大小为1024*1024字节，即1M。如果从服务器的psync_offset还在复制备份队列范围内，那将执行部分重同步操作；反之将执行完整重同步；另外如果当前连接的主服务器的运行id与之前保存的运行id不一致也不能执行部分重同步。</p>
+<p>17、命令传播<br>一般来说在执行完同步命令后，主从服务器的数据库状态应该保持一致，但是假设在主从服务器刚刚完成同步后，客户端又向主服务器发送了相关的写命令，那么此时主从数据库的状态是不一致的，这个时候主服务器就需要对从服务器执行命令传播：主服务器将执行的写命令发送给从服务器，待从服务器执行后，两者的数据库状态将保持一致。</p>
+<p>18、Redis高可用性方案<br>这里的高可用指当主服务器挂了以后，从服务器应该能担当主服务器的角色，从而提供给用户正常的读写服务。  </p>
+<p>哨兵（Sentinel）是Redis高可用性的一个解决方案：由一个或多个哨兵实例组成的哨兵系统可以监视多个主服务器及该主服务器下的所有从服务器，当主服务器宕机下线时，哨兵系统可以迅速感知这一情况，从从服务器中选举出一个服务器充当主服务器的角色，进行故障转移</p>
+<p>19、哨兵（Sentinel）是什么<br>哨兵Sentinel本质上是一个运行在特殊模式下的Redis服务器。当Sentinel与一个主服务器或从服务器建立订阅连接后，Sentinel会通过订阅连接以两秒一次的频率向所有被监视的主服务器及从服务器的<strong>sentinel</strong>:hello频道发生消息。通过这种固定频率的通讯，Sentinel会在通讯时更新各项信息，如主服务器的状态，id以及从服务器的状态，id等。那么通过Sentinel模式，我们就可以实时感知到Redis服务器网络中的情况。 </p>
+<p>20、哨兵（Sentinel）故障转移方案<br>遇到主服务器宕机影响服务正常运行的情况，Sentinel给出了以下几个步骤来解决：<br>1）主观下线：Sentinel会默认以1秒的频率向所有与其创建了命令连接的实例发送PING命令，当实例运作不正常时，Sentinel将会开启这个实例的SRI_S_DOWN标志，从而表示这个实例进入主观下线状态；<br>2）客观下线：当一个主服务器被Sentinel判断为主观下线后，为了确保其真的下线，该Sentinel会向其他监视着一主服务器的Sentinel进行询问，看其他的Sentinel是否也将其标记为主观下线，若超过一定数量（sentinelRedisInstance结构中的quorum属性）的Sentinel都认为此主服务器下线了，那么该主服务器会被标记为客观下线；<br>3）选举领导Sentinel：每个Sentinel都有选举权以及被选举权，并且每个发现主服务器客观下线的Sentinel都会要求别的Sentinel将自己设置为老大。但是，在一个配置纪元内，所有的Sentinel都只有一次将某个Sentinel投票为老大的机会，投票的规则是先到先得：最开始向Sentinel A发送投票请求的Sentinel将成为Sentinel A的局部领导，之后所有的投票请求都将被拒绝，因为老大只能设置一次。只有被超过一半的Sentinel选举为局部领导的Sentinel才能成为真正的领导；<br>4）故障转移：故障转移分为以下几个步骤：1）准备执行故障转移，确认本Sentinel为领导Sentinel；2）选择合适的从服务器作为新的主服务器；3）向被选中的从服务器发送 SLAVEOF no one 命令，将它升级为新的主服务器；4）让其他尚未同步新主服务器的从服务器同步该新主服务器</p>
+<p>21、Redis集群<br>通过Redis集群（cluster）也能起到与哨兵相同的作用。集群通过分片（sharding）来进行数据共享，并提供复制和故障转移的功能。Redis集群数据默认在0数据库。 </p>
+<p>22、槽（slot）是什么<br>Redis通过分片来保存数据库中的键值对，所谓分片是指数据库被分为了16384个槽（slot），所有的键值对都在这16384个槽中，每个 key 通过 CRC16 校验后对 16384 取模来决定放置哪个槽，集群中的节点会被指派处理这些槽。</p>
+<p>23、Redis集群如何执行命令<br>当集群上线后，客户端就可以向集群中的节点发送命令请求，当客户端的命令与键相关时，接受命令的节点会计算这个键所在的槽，并且检查自己是否负责这个槽，如果刚好负责这个槽则执行命令，否则节点向客户端返回MOVED错误，并转向正确的节点，并让正确的节点执行命令。</p>
+<p>24、Redis集群重分片<br>可以通过重新分片操作将指派给节点A的槽重新指派给节点B，重分片过程可以在线进行即不需要让集群下线。重分片步骤如下：<br>1）让目标节点准备从源节点导入属于slot槽的键值对；<br>2）让源节点将属于槽slot的键值对迁移到目标节点；<br>3）所有属于槽slot的键值对都迁移到目标节点；<br>4）将槽slot指给向集群中任意一个节点A，并且这个信息会传播到整个集群，从而让所有的节点都知道槽slot指派给了节点A。  </p>
+<p>25、槽迁移时的命令处理<br>如果槽slot正在进行迁移，如果此时客户端的一个命令请求刚好是涉及到slot里的键，源节点首先会在自己的数据库中查找这个键，如果找到的话就直接执行命令，如果没找到，说明这个键已经迁移到目标节点，此时源节点将返回ASK错误，并引导客户端的命令导入正确的节点。</p>
+<p>26、集群中的下线检测<br>集群中每个节点都会定期向其他节点发送PING消息，来检测节点是否在线，如果节点没有在规定时间内返回PONG，那个发送PING的节点就会将此节点标记为疑似下线（probable fail），当一个主节点A知道节点B将C疑似下线时，主节点会将主节点B的下线报告（failure report）加入到clusterNode的fail_reports链表中。当节点被标记为疑似下线PFAIL时，会判断这个节点是否真的下线了。判断逻辑是向集群中其他节点询问是否认为此节点下线，如果半数以上节点认为此节点下线了，那么这个节点就会被标记为下线FAIL。</p>
+<p>27、集群中的故障转移<br>当从节点发现主节点下线时，就会对主节点进行故障转移，步骤总体与哨兵中的逻辑类似。<br>1）从主节点的所有从节点中选择一个节点成为主节点；<br>2）新的主节点会将已下线的主节点的槽指派全部取消，并把这些槽全部指派给自己；<br>3）新主节点会向集群广播一条PONG消息，从而让其他主节点知道这个节点成为了新的主节点；<br>4）新主节点开始接收处理和自己负责的槽相关的命令请求，故障转移完成</p>
+<p>28、Redis数据淘汰策略<br>volatile-lru：从已设置过期时间的数据集  （server.db[i].expires）中挑选最近最少使用的数据淘汰<br>volatile-ttl：从已设置过期时间的数据集  （server.db[i].expires）中挑选将要过期的数据淘汰<br>volatile-random：从已设置过期时间的数据集  （server.db[i].expires）中任意选择数据淘汰<br>allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰<br>allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰<br>no-enviction（驱逐）：禁止驱逐数据</p>
+<p>29、Redis查找符合某些规则的key<br>在巨大的数据量的情况下，做类似于查找符合某种规则的Key的信息，这里就有两种方式：<br>一是keys命令，简单粗暴，由于Redis单线程这一特性，keys命令是以阻塞的方式执行的，keys是以遍历的方式实现的复杂度是 O(n），Redis库中的key越多，查找实现代价越大，产生的阻塞时间越长；<br>二是scan命令，以非阻塞的方式实现key值的查找，绝大多数情况下是可以替代keys命令的，可选性更强。但是会有一定的重复概率，在客户端做一次去重就可以了。 </p>
+<p>30、如果有大量的 key 需要设置同一时间过期，一般需要注意什么<br>如果大量的 key 过期时间设置的过于集中，到过期的那个时间点，redis 可能会出现短暂的卡顿现象。一般需要在时间上加一个随机值，使得过期时间分散一些。</p>
+<p>31、Redis分布式锁<br>先拿 setnx 来争抢锁，抢到之后，再用 expire 给锁加一个过期时间防止锁忘记了释放，这种方案有缺陷，因为是两个操作，不能保证原子性。而且当在 setnx 之后执行 expire之前进程意外crash，将会导致锁一直没有办法被释放。<br>但是set 指令有非常复杂的参数，这个应该是可以同时把 setnx 和expire 合成一条指令来用</p>
+<p>32、Memcache 与 Redis 的区别都有哪些。<br>（1）存储方式：Memecache 把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，这样能保证数据的持久性；<br>（2）数据支持类型：Memcache 对数据类型支持相对简单。 Redis 有复杂的数据类型；<br>（3）使用底层模型不同：它们之间底层实现方式以及与客户端之间通信的应用协议不一样。</p>
+<h3 id="三-总结"><a href="#三-总结" class="headerlink" title="三. 总结"></a>三. 总结</h3><p>粗略总结</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODk5Ni8xNTUyMw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://pd4rycnmc.bkt.clouddn.com/coffee.jpg"
+                alt="Olive" />
+            
+              <p class="site-author-name" itemprop="name">Olive</p>
+              <p class="site-description motion-element" itemprop="description">Bad times make a good man.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/OliveZT" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:olive_zt@g163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-背景"><span class="nav-number">1.</span> <span class="nav-text">一. 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-开整！"><span class="nav-number">2.</span> <span class="nav-text">二. 开整！</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Dubbo（Tesla）"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. Dubbo（Tesla）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-MQ-（RabbitMQ）"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. MQ （RabbitMQ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-ZK"><span class="nav-number">2.3.</span> <span class="nav-text">2.3. ZK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-Redis"><span class="nav-number">2.4.</span> <span class="nav-text">2.4. Redis</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-总结"><span class="nav-number">3.</span> <span class="nav-text">三. 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Olive</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<span id="busuanzi_container_site_pv">
+    Total visited <span id="busuanzi_value_site_pv"></span> times
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+  <!-- custom analytics part create by olive -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+  
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("i3gl84HxVj6IgHa1O3yAAbVr-gzGzoHsz", "EW6LPV1IQu3g5yE43WefC6ly");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
